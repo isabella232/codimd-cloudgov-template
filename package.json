@@ -25,6 +25,7 @@
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
     "bootstrap-validator": "^0.11.8",
+    "cfenv": "^1.1.0",
     "chance": "^1.0.4",
     "cheerio": "^0.22.0",
     "codemirror": "git+https://github.com/hackmdio/CodeMirror.git",
