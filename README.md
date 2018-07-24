@@ -26,6 +26,7 @@ Thanks for using! :smile:
   - [Getting started (Native install)](#getting-started-native-install)
     - [Prerequisite](#prerequisite)
     - [Instructions](#instructions)
+  - [PaaS Deployment](#paas-deployment)
   - [Heroku Deployment](#heroku-deployment)
   - [Kubernetes](#kubernetes)
   - [CodiMD by docker container](#codimd-by-docker-container)
@@ -84,6 +85,18 @@ Just to more confusion: We are still friends with HackMD :heart:
    For example: `postgres://username:password@localhost:5432/codimd`
 7. Run `node_modules/.bin/sequelize db:migrate`, this step will migrate your db to the latest schema
 8. Run the server as you like (node, forever, pm2)
+
+## PaaS Deployment
+
+You can deploy this for on the PaaS by performing the following actions
+
+1. `cf push --no-start`
+1. `cf set-env hackmd CMD_DOMAIN hackmd.cloudapps.digital`
+1. `cf set-env hackmd CMD_PROTOCOL_USESSL true`
+1. `cf set-env hackmd CMD_ALLOW_ORIGIN localhost,hackmd.cloudapps.digital,cdnjs.cloudflare.com,fonts.googleapis.com,fonts.gstatic.com`
+1. `cf set-env hackmd CMD_GITHUB_CLIENTID <From credstore>`
+1. `cf set-env hackmd CMD_GITHUB_CLIENTSECRET <From credstore>`
+1. `cf start hackmd`
 
 ## Heroku Deployment
 
