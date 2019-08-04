@@ -138,7 +138,7 @@
     "toobusy-js": "~0.5.1",
     "turndown": "~5.0.3",
     "uuid": "~3.3.2",
-    "validator": "~10.4.0",
+    "validator": "~11.1.0",
     "vega": "~5.4.0",
     "vega-embed": "~4.2.2",
     "vega-lite": "~3.4.0",
