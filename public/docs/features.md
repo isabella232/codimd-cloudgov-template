@@ -8,7 +8,7 @@ This means that you can write notes with other people on your **desktop**, **tab
 You can sign-in via multiple auth providers like **Facebook**, **Twitter**, **GitHub** and many more on the [_homepage_](/).
 
 If you experience any _issues_, feel free to report it on [**GitHub**](https://github.com/hackmdio/codimd/issues).
-Or meet us on [**Matrix.org**](https://riot.im/app/#/room/#codimd:matrix.org) or [**Gitter**](https://gitter.im/hackmdio/hackmd) for dev-talk and interactive help.
+Or meet us on [**Gitter**](https://gitter.im/hackmdio/hackmd) for dev-talk and interactive help.
 **Thank you very much!**
 
 Workspace
@@ -72,8 +72,10 @@ Notes can be embedded as follows:
 
 ## [Slide Mode](./slide-example):
 You can use a special syntax to organize your note into slides.
-After that, you can use the **Slide Mode** <i class="fa fa-tv"></i> to make a presentation.
+After that, you can use the **[Slide Mode](./slide-example)** <i class="fa fa-tv"></i> to make a presentation.
 Visit the above link for details.
+
+To switch the editor into slide mode, set the [document type](./yaml-metadata#type) to `slide`.
 
 View
 ===
@@ -88,9 +90,23 @@ You can hover and click <i class="fa fa-chain"></i> to anchor on it.
 
 Edit:
 ===
+## Editor Modes:
+You can look in the bottom right section of the editor area, there you'll find a button with `sublime` on it.
+When you click it, you can select 3 editor modes:
+
+- sublime (default)
+- emacs
+- vim
+
 ## Shortcut Keys:
-Just like Sublime text, which is pretty quick and convenient.
-> For more infomation, see [here](https://codemirror.net/demo/sublime.html).
+The shortcut keys depend on your selected editor mode. By default they are just like Sublime text, which is pretty quick and convenient.
+> For more information, see [here](https://codemirror.net/demo/sublime.html).
+
+For emacs:
+> For more information, see [here](https://codemirror.net/demo/emacs.html).
+
+For vim:
+> For more information, see [here](https://codemirror.net/demo/vim.html).
 
 ## Auto-Complete:
 This editor provides full auto-complete hints in markdown.
@@ -195,7 +211,7 @@ When you’re a carpenter making a beautiful chest of drawers, you’re not goin
 ## Externals
 
 ### YouTube
-{%youtube 1G4isv_Fylg %}
+{%youtube aqz-KE-bpKQ %}
 
 ### Vimeo
 {%vimeo 124148255 %}
@@ -205,9 +221,6 @@ When you’re a carpenter making a beautiful chest of drawers, you’re not goin
 
 ### SlideShare
 {%slideshare briansolis/26-disruptive-technology-trends-2016-2018-56796196 %}
-
-### Speakerdeck
-{%speakerdeck sugarenia/xxlcss-how-to-scale-css-and-keep-your-sanity %}
 
 ### PDF
 **Caution: this might be blocked by your browser if not using an `https` URL.**
@@ -300,11 +313,45 @@ GABc dedB|dedB dedB|c2ec B2dB|A2F2 G4:|
 g2gf g2Bd|g2f2 e2d2|c2ec B2dB|A2F2 G4:|
 ```
 
+### PlantUML
+```plantuml
+start
+if (condition A) then (yes)
+  :Text 1;
+elseif (condition B) then (yes)
+  :Text 2;
+  stop
+elseif (condition C) then (yes)
+  :Text 3;
+elseif (condition D) then (yes)
+  :Text 4;
+else (nothing)
+  :Text else;
+endif
+stop
+```
+
+### Vega-Lite
+```vega
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+  "data": {"url": "https://vega.github.io/editor/data/barley.json"},
+  "mark": "bar",
+  "encoding": {
+    "x": {"aggregate": "sum", "field": "yield", "type": "quantitative"},
+    "y": {"field": "variety", "type": "nominal"},
+    "color": {"field": "site", "type": "nominal"}
+  }
+}
+```
+
 > More information about **sequence diagrams** syntax [here](http://bramp.github.io/js-sequence-diagrams/).
 > More information about **flow charts** syntax [here](http://adrai.github.io/flowchart.js/).
 > More information about **graphviz** syntax [here](http://www.tonyballantyne.com/graphs.html)
 > More information about **mermaid** syntax [here](http://knsv.github.io/mermaid)
 > More information about **abc** syntax [here](http://abcnotation.com/learn)
+> More information about **plantuml** syntax [here](http://plantuml.com/index)
+> More information about **vega** syntax [here](https://vega.github.io/vega-lite/docs)
 
 Alert Area
 ---
@@ -322,6 +369,10 @@ Watch out :zap:
 
 :::danger
 Oh No! :fire:
+:::
+
+:::spoiler Click to show details
+You found me :stuck_out_tongue_winking_eye:
 :::
 
 ## Typography
@@ -384,6 +435,7 @@ Subscript: H~2~O
 
 ==Marked text==
 
+{ruby base|rubytext}
 
 ### Blockquotes
 

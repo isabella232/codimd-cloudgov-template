@@ -6,6 +6,7 @@
         }
     },
     "development": {
+        "loglevel": "debug",
         "hsts": {
             "enable": false
         },
@@ -16,9 +17,10 @@
     },
     "production": {
         "domain": "localhost",
+        "loglevel": "info",
         "hsts": {
             "enable": true,
-            "maxAgeSeconds": "31536000",
+            "maxAgeSeconds": 31536000,
             "includeSubdomains": true,
             "preload": true
         },
@@ -55,7 +57,8 @@
             "baseURL": "change this",
             "clientID": "change this",
             "clientSecret": "change this",
-            "scope": "use 'read_user' scope for auth user only or remove this property if you need gitlab snippet import/export support (will result to be default scope 'api')"
+            "scope": "use 'read_user' scope for auth user only or remove this property if you need gitlab snippet import/export support (will result to be default scope 'api')",
+            "version": "use 'v4' if gitlab version > 11, 'v3' otherwise. Default to 'v4'"
         },
         "mattermost": {
             "baseURL": "change this",
@@ -90,6 +93,7 @@
             "idpCert": "change: certificate file path of IdP in PEM format",
             "issuer": "change or delete: identity of the service provider (default: serverurl)",
             "identifierFormat": "change or delete: name identifier format (default: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress')",
+            "disableRequestedAuthnContext": "change or delete: true to allow any authentication method, false restricts to password authentication method (default: false)",
             "groupAttribute": "change or delete: attribute name for group list (ex: memberOf)",
             "requiredGroups": [ "change or delete: group names that allowed" ],
             "externalGroups": [ "change or delete: group names that not allowed" ],
@@ -119,6 +123,10 @@
         {
           "connectionString": "change this",
           "container": "change this"
+        },
+        "plantuml":
+        {
+          "server": "https://www.plantuml.com/plantuml"
         }
     }
 }

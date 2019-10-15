@@ -15,12 +15,12 @@
                     <a id="permissionLabel" class="ui-permission-label text-uppercase" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="permissionLabel">
-                        <li class="ui-permission-freely"<% if(!allowAnonymous && !allowAnonymousEdits) { %> style="display: none;"<% } %>><a><i class="fa fa-leaf fa-fw"></i> Freely - Anyone can edit</a></li>
-                        <li class="ui-permission-editable"><a><i class="fa fa-shield fa-fw"></i> Editable - Signed-in people can edit</a></li>
-                        <li class="ui-permission-limited"><a><i class="fa fa-id-card fa-fw"></i> Limited - Signed-in people can edit (forbid guests)</a></li>
-                        <li class="ui-permission-locked"><a><i class="fa fa-lock fa-fw"></i> Locked - Only owner can edit</a></li>
-                        <li class="ui-permission-protected"><a><i class="fa fa-umbrella fa-fw"></i> Protected - Only owner can edit (forbid guests)</a></li>
-                        <li class="ui-permission-private"><a><i class="fa fa-hand-stop-o fa-fw"></i> Private - Only owner can view &amp; edit</a></li>
+                        <li class="ui-permission-freely"<% if(!('freely' in permission)) { %> style="display: none;"<% } %>><a><i class="fa fa-leaf fa-fw"></i> Freely - Anyone can edit</a></li>
+                        <li class="ui-permission-editable"<% if(!('editable' in permission)) { %> style="display: none;"<% } %>><a><i class="fa fa-shield fa-fw"></i> Editable - Signed-in people can edit</a></li>
+                        <li class="ui-permission-limited"<% if(!('limited' in permission)) { %> style="display: none;"<% } %>><a><i class="fa fa-id-card fa-fw"></i> Limited - Signed-in people can edit (forbid guests)</a></li>
+                        <li class="ui-permission-locked"<% if(!('locked' in permission)) { %> style="display: none;"<% } %>><a><i class="fa fa-lock fa-fw"></i> Locked - Only owner can edit</a></li>
+                        <li class="ui-permission-protected"<% if(!('protected' in permission)) { %> style="display: none;"<% } %>><a><i class="fa fa-umbrella fa-fw"></i> Protected - Only owner can edit (forbid guests)</a></li>
+                        <li class="ui-permission-private"<% if(!('private' in permission)) { %> style="display: none;"<% } %>><a><i class="fa fa-hand-stop-o fa-fw"></i> Private - Only owner can view &amp; edit</a></li>
                         <li class="divider"></li>
                         <li class="ui-delete-note"><a><i class="fa fa-trash-o fa-fw"></i> Delete this note</a></li>
                     </ul>
@@ -113,7 +113,7 @@
             </div>
             <div class="modal-body" style="color:black;">
                 <h5></h5>
-                <a target="_blank" style="word-break: break-all;"></a>
+                <a target="_blank" rel="noopener" style="word-break: break-all;"></a>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><%= __('OK') %></button>
@@ -153,6 +153,7 @@
             <div class="modal-body">
                 <input type="hidden" id="snippetImportModalAccessToken" />
                 <input type="hidden" id="snippetImportModalBaseURL" />
+                <input type="hidden" id="snippetImportModalVersion" />
                 <div class="ui-field-contain" style="display:table;margin-bottom:10px;width:100%;">
                     <div style="display:table-row;margin-bottom:5px;">
                         <label style="display:table-cell;">Project:</label>
@@ -191,6 +192,7 @@
             <div class="modal-body">
                 <input type="hidden" id="snippetExportModalAccessToken" />
                 <input type="hidden" id="snippetExportModalBaseURL" />
+                <input type="hidden" id="snippetExportModalVersion" />
                 <div class="ui-field-contain" style="display:table;margin-bottom:10px;width:100%;">
                     <div style="display:table-row;margin-bottom:5px;">
                         <label style="display:table-cell;">Title:</label>
@@ -233,7 +235,7 @@
                 </button>
                 <h4 class="modal-title" id="myModalLabel"><%= __('Are you sure?') %></h4>
             </div>
-            <div class="modal-body" style="color:black;">
+            <div class="modal-body">
                 <h5 class="ui-delete-modal-msg"><%= __('Do you really want to delete this note?') %></h5>
                 <strong class="ui-delete-modal-item"><%= __('All users will lose their connection.') %></strong>
             </div>

@@ -1,11 +1,11 @@
 /* eslint-env browser, jquery */
 /* global serverurl, Reveal, RevealMarkdown */
 
-require('../css/extra.css')
-require('../css/site.css')
-
 import { preventXSS } from './render'
 import { md, updateLastChange, removeDOMEvents, finishView } from './extra'
+
+require('../css/extra.css')
+require('../css/site.css')
 
 const body = preventXSS($('.slides').text())
 
@@ -17,7 +17,7 @@ $('.ui-edit').attr('href', `${url}/edit`)
 $('.ui-print').attr('href', `${url}?print-pdf`)
 
 $(document).ready(() => {
-    // tooltip
+  // tooltip
   $('[data-toggle="tooltip"]').tooltip()
 })
 
@@ -26,7 +26,7 @@ function extend () {
 
   for (const source of arguments) {
     for (const key in source) {
-      if (source.hasOwnProperty(key)) {
+      if (Object.hasOwnProperty.call(source, key)) {
         target[key] = source[key]
       }
     }
@@ -74,6 +74,21 @@ const defaultOptions = {
 const meta = JSON.parse($('#meta').text())
 var options = meta.slideOptions || {}
 
+if (Object.hasOwnProperty.call(options, 'spotlight')) {
+  defaultOptions.dependencies.push({
+    src: `${serverurl}/build/reveal.js/plugin/spotlight/spotlight.js`
+  })
+}
+
+if (Object.hasOwnProperty.call(options, 'allottedTime') || Object.hasOwnProperty.call(options, 'allottedMinutes')) {
+  defaultOptions.dependencies.push({
+    src: `${serverurl}/build/reveal.js/plugin/elapsed-time-bar/elapsed-time-bar.js`
+  })
+  if (Object.hasOwnProperty.call(options, 'allottedMinutes')) {
+    options.allottedTime = options.allottedMinutes * 60 * 1000
+  }
+}
+
 const view = $('.reveal')
 
 // text language
@@ -108,14 +123,14 @@ window.viewAjaxCallback = () => {
 function renderSlide (event) {
   if (window.location.search.match(/print-pdf/gi)) {
     const slides = $('.slides')
-    let title = document.title
+    const title = document.title
     finishView(slides)
     document.title = title
     Reveal.layout()
   } else {
     const markdown = $(event.currentSlide)
     if (!markdown.attr('data-rendered')) {
-      let title = document.title
+      const title = document.title
       finishView(markdown)
       markdown.attr('data-rendered', 'true')
       document.title = title
@@ -127,7 +142,7 @@ function renderSlide (event) {
 Reveal.addEventListener('ready', event => {
   renderSlide(event)
   const markdown = $(event.currentSlide)
-    // force browser redraw
+  // force browser redraw
   setTimeout(() => {
     markdown.hide().show(0)
   }, 0)
