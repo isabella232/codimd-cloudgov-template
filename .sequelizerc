@@ -1,0 +1,10 @@
+const path = require('path')
+const config = require('./lib/config')
+
+module.exports = {
+    'config':          path.resolve('config.json'),
+    'migrations-path': path.resolve('lib', 'migrations'),
+    'models-path':     path.resolve('lib', 'models'),
+    'dialect':         'postgres',
+    'url':             JSON.parse(process.env.VCAP_SERVICES)["aws-rds"]["credentials"]["uri"]
+}

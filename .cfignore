@@ -1,6 +1,5 @@
 node_modules
 package-lock.json
-yarn.lock
 composer.phar
 composer.lock
 .env.*.php
@@ -20,7 +19,6 @@ backups/
 
 # ignore config files
 config.json
-.sequelizerc
 
 # ignore webpack build
 public/build
