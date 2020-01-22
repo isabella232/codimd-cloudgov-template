@@ -19,7 +19,6 @@ backups/
 
 # ignore config files
 config.json
-.sequelizerc
 
 # ignore webpack build
 public/build
@@ -27,3 +26,5 @@ public/views/build
 
 public/uploads/*
 !public/uploads/.gitkeep
+/.nyc_output
+/coverage/
