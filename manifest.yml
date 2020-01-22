@@ -3,7 +3,7 @@ applications:
 - name: hackmd
   instances: 1
   memory: 4G
-  command: npm build && npm start
+  command: npm run build && npm run start
   buildpacks: 
     - nodejs_buildpack
   env:
