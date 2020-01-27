@@ -37,7 +37,7 @@
     "@susisu/mte-kernel": "^2.1.0",
     "archiver": "~3.1.1",
     "async": "~3.1.0",
-    "aws-sdk": "~2.503.0",
+    "aws-sdk": "~2.610.0",
     "azure-storage": "~2.10.3",
     "babel-cli": "^6.18.0",
     "babel-core": "~6.26.3",
