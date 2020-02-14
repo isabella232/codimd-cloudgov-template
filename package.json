@@ -183,7 +183,7 @@
     "ws": "~7.1.1",
     "wurl": "~2.5.3",
     "xss": "~1.0.6",
-    "yarn": "^1.21.1"
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "@hackmd/emojify.js": "^2.1.0",
