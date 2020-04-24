@@ -11,10 +11,53 @@ Built on [HackMD](https://hackmd.io) source code, CodiMD lets you host and contr
 
 ![screenshot](https://raw.githubusercontent.com/hackmdio/codimd/develop/public/screenshot.png)
 
+## Deploy to Cloud.gov
+
+```bash
+$ git clone https://github.com/18f/paas-codimd
+$ cd paas-codimd
+$ git checkout -b some-test-branch
+$ cp config.json.sample config.json
+# ^ this file is git ignored and is where you will copy and paste the github oauth tokens
+```
+
+**Install Node/NPM**
+[Check to see what is working in upstream](https://travis-ci.com/github/hackmdio/codimd)
+* [v10 LTS Dubnium](https://nodejs.org/download/release/latest-dubnium/)
+* [v12 LTS Erbium](https://nodejs.org/download/release/latest-erbium/)
+
+**Install yarn and build app**
+```bash
+$ npm install -g yarn
+$ yarn install
+$ yarn run build
+```
+
+**Setup a cloud.gov account, follow instructions to install the cf-cli, and login on the command line:**
+* https://cloud.gov/docs/getting-started/accounts/
+* https://cloud.gov/docs/getting-started/setup/
+
+```bash
+cf login -a api.fr.cloud.gov  --sso
+```
+* Copy and Paste the [Temporary Authentication Code](https://login.fr.cloud.gov/passcode) when prompted
+* Setup a demo application `space`
+* Create a small shared postgresql database for testing
+* Update manifest.yml file to rename `applications: - name:`
+
+```bash
+$ cf target -o sandbox-gsa create-space paas-codimd
+$ cf marketplace
+$ cf create-service aws-rds shared-psql paas-codimd-db
+$ cf create-service-key paas-codimd-db paas-codimd-db-test
+$ cf push
+```
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
 
+- [HackMD](#hackmd)
 - [CodiMD - The Open Source HackMD](#codimd---the-open-source-hackmd)
 - [Documentation](#documentation)
   - [Deployment](#deployment)
@@ -27,14 +70,17 @@ Built on [HackMD](https://hackmd.io) source code, CodiMD lets you host and contr
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## CodiMD - The Open Source HackMD
+## HackMD
+
 [HackMD](https://hackmd.io) helps developers write better documents and build active communities with open collaboration.
 HackMD is built with one promise - **You own and control all your content**:
 - You should be able to easily [download all your online content at once](https://hackmd.io/c/news/%2Fs%2Fr1cx3a3SE).
 - Your content formatting should be portable as well. (That's why we choose [markdown](https://hackmd.io/features#Typography).)
 - You should be able to control your content's presentation with HTML, [slide mode](https://hackmd.io/p/slide-example), or [book mode](https://hackmd.io/c/book-example/).
 
-With the same promise of you owning your content, CodiMD is the free software version of [HackMD](https://hackmd.io), developed and opened source by the HackMD team with reduced features, so you can use CodiMD for your community and own your data. *(See the [origin of the name CodiMD](https://github.com/hackmdio/hackmd/issues/720).)* 
+## CodiMD - The Open Source HackMD
+
+CodiMD is the free software version of [HackMD](https://hackmd.io), developed and opened source by the HackMD team with reduced features (without book mode), you can use CodiMD for your community and own all your data. *(See the [origin of the name CodiMD](https://github.com/hackmdio/hackmd/issues/720).)* 
 
 CodiMD is perfect for open communities, while HackMD emphasizes on permission and access controls for commercial use cases. 
 
@@ -44,14 +90,14 @@ HackMD team is committed to keep CodiMD open source. All contributions are welco
 You would find all documentation here: [CodiMD Documentation](https://hackmd.io/c/codimd-documentation)
 
 ### Deployment
-If you want to spin up an instance and start using immediately, see [Docker deployment](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-documentation#Deployment).
+If you want to spin up an instance and start using immediately, see [Docker deployment](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-docker-deployment).
 If you want to contribute to the project, start with [manual deployment](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-manual-deployment).
 
 ### Configuration
 CodiMD is highly customizable, learn about all configuration options of networking, security, performance, resources, privilege, privacy, image storage, and authentication in [CodiMD Configuration](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-configuration).
 
 ### Upgrading and Migration
-Upgrade CodiMD from previous version? See [this guide](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-upgrade)
+Upgrade CodiMD from previous version? See [this guide](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-upgrade)<br>
 Migrating from Etherpad? Follow [this guide](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-migration-etherpad)
 
 ### Developer

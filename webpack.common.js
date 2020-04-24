@@ -165,13 +165,29 @@ module.exports = {
         context: path.join(__dirname, 'node_modules/reveal.js'),
         from: 'plugin',
         to: 'reveal.js/plugin'
+      },
+      {
+        context: path.join(__dirname, 'node_modules/dictionary-de'),
+        from: '*',
+        to: 'dictionary-de/'
+      },
+      {
+        context: path.join(__dirname, 'node_modules/dictionary-de-at'),
+        from: '*',
+        to: 'dictionary-de-at/'
+      },
+      {
+        context: path.join(__dirname, 'node_modules/dictionary-de-ch'),
+        from: '*',
+        to: 'dictionary-de-ch/'
+      },
+      {
+        context: path.join(__dirname, 'node_modules/leaflet'),
+        from: 'dist',
+        to: 'leaflet'
       }
     ]),
-    new MiniCssExtractPlugin(),
-    new webpack.NormalModuleReplacementPlugin(
-      /^url$/,
-      path.resolve(__dirname, './public/js/url.js')
-    )
+    new MiniCssExtractPlugin()
   ],
 
   entry: {
@@ -207,7 +223,6 @@ module.exports = {
       'script-loader!codemirror',
       'script-loader!inlineAttachment',
       'script-loader!jqueryTextcomplete',
-      'script-loader!codemirrorSpellChecker',
       'script-loader!codemirrorInlineAttachment',
       'script-loader!ot',
       'flowchart.js',
@@ -226,6 +241,15 @@ module.exports = {
       path.join(__dirname, 'node_modules/@hackmd/codemirror/addon/search/matchesonscrollbar.css'),
       path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/monokai.css'),
       path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/one-dark.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/dracula.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/material.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/nord.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/panda-syntax.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/solarized.css'),
+      path.join(__dirname, 'public/css/codemirror-extend/ayu-dark.css'),
+      path.join(__dirname, 'public/css/codemirror-extend/ayu-mirage.css'),
+      path.join(__dirname, 'public/css/codemirror-extend/tomorrow-night-bright.css'),
+      path.join(__dirname, 'public/css/codemirror-extend/tomorrow-night-eighties.css'),
       path.join(__dirname, 'node_modules/@hackmd/codemirror/mode/tiddlywiki/tiddlywiki.css'),
       path.join(__dirname, 'node_modules/@hackmd/codemirror/mode/mediawiki/mediawiki.css'),
       path.join(__dirname, 'public/css/github-extract.css'),
@@ -238,7 +262,8 @@ module.exports = {
       path.join(__dirname, 'node_modules/bootstrap/dist/css/bootstrap.min.css'),
       path.join(__dirname, 'node_modules/fork-awesome/css/fork-awesome.min.css'),
       path.join(__dirname, 'public/css/bootstrap-social.css'),
-      path.join(__dirname, 'node_modules/ionicons/css/ionicons.min.css')
+      path.join(__dirname, 'node_modules/ionicons/css/ionicons.min.css'),
+      path.join(__dirname, 'node_modules/leaflet/dist/leaflet.css')
     ],
     'index-pack': [
       'babel-polyfill',
@@ -254,7 +279,6 @@ module.exports = {
       'script-loader!codemirror',
       'script-loader!inlineAttachment',
       'script-loader!jqueryTextcomplete',
-      'script-loader!codemirrorSpellChecker',
       'script-loader!codemirrorInlineAttachment',
       'script-loader!ot',
       'flowchart.js',
@@ -267,6 +291,7 @@ module.exports = {
       'script-loader!vega-embed',
       'expose-loader?io!socket.io-client',
       'expose-loader?RevealMarkdown!reveal-markdown',
+      'expose-loader?L!leaflet',
       path.join(__dirname, 'public/js/index.js')
     ],
     pretty: [
@@ -285,7 +310,8 @@ module.exports = {
     'pretty-styles-pack': [
       path.join(__dirname, 'node_modules/bootstrap/dist/css/bootstrap.min.css'),
       path.join(__dirname, 'node_modules/fork-awesome/css/fork-awesome.min.css'),
-      path.join(__dirname, 'node_modules/ionicons/css/ionicons.min.css')
+      path.join(__dirname, 'node_modules/ionicons/css/ionicons.min.css'),
+      path.join(__dirname, 'node_modules/leaflet/dist/leaflet.css')
     ],
     'pretty-pack': [
       'babel-polyfill',
@@ -305,6 +331,7 @@ module.exports = {
       'script-loader!vega-lite',
       'script-loader!vega-embed',
       'expose-loader?RevealMarkdown!reveal-markdown',
+      'expose-loader?L!leaflet',
       path.join(__dirname, 'public/js/pretty.js')
     ],
     slide: [
@@ -323,7 +350,8 @@ module.exports = {
     ],
     'slide-styles-pack': [
       path.join(__dirname, 'node_modules/fork-awesome/css/fork-awesome.min.css'),
-      path.join(__dirname, 'node_modules/ionicons/css/ionicons.min.css')
+      path.join(__dirname, 'node_modules/ionicons/css/ionicons.min.css'),
+      path.join(__dirname, 'node_modules/leaflet/dist/leaflet.css')
     ],
     'slide-pack': [
       'babel-polyfill',
@@ -346,9 +374,9 @@ module.exports = {
       'script-loader!vega',
       'script-loader!vega-lite',
       'script-loader!vega-embed',
-      'headjs',
       'expose-loader?Reveal!reveal.js',
       'expose-loader?RevealMarkdown!reveal-markdown',
+      'expose-loader?L!leaflet',
       path.join(__dirname, 'public/js/slide.js')
     ]
   },
@@ -366,7 +394,6 @@ module.exports = {
       codemirror: path.join(__dirname, 'node_modules/@hackmd/codemirror/codemirror.min.js'),
       inlineAttachment: path.join(__dirname, 'public/vendor/inlineAttachment/inline-attachment.js'),
       jqueryTextcomplete: path.join(__dirname, 'public/vendor/jquery-textcomplete/jquery.textcomplete.js'),
-      codemirrorSpellChecker: path.join(__dirname, 'public/vendor/codemirror-spell-checker/spell-checker.min.js'),
       codemirrorInlineAttachment: path.join(__dirname, 'public/vendor/inlineAttachment/codemirror.inline-attachment.js'),
       ot: path.join(__dirname, 'public/vendor/ot/ot.min.js'),
       mermaid: path.join(__dirname, 'node_modules/mermaid/dist/mermaid.min.js'),
@@ -374,7 +401,6 @@ module.exports = {
       'jquery-ui-resizable': path.join(__dirname, 'public/vendor/jquery-ui/jquery-ui.min.js'),
       'gist-embed': path.join(__dirname, 'node_modules/gist-embed/gist-embed.min.js'),
       'bootstrap-tooltip': path.join(__dirname, 'public/vendor/bootstrap/tooltip.min.js'),
-      'headjs': path.join(__dirname, 'node_modules/reveal.js/lib/js/head.min.js'),
       'reveal-markdown': path.join(__dirname, 'public/js/reveal-markdown.js'),
       abcjs: path.join(__dirname, 'public/vendor/abcjs_basic_3.1.1-min.js'),
       raphael: path.join(__dirname, 'node_modules/raphael/raphael.min.js'),
@@ -385,7 +411,8 @@ module.exports = {
       'emojify.js': path.join(__dirname, 'node_modules/@hackmd/emojify.js/dist/js/emojify-browser.min.js'),
       'markdown-it': path.join(__dirname, 'node_modules/markdown-it/dist/markdown-it.js'),
       'viz.js': path.join(__dirname, 'node_modules/viz.js/viz.js'),
-      'viz.render.js': path.join(__dirname, 'node_modules/viz.js/full.render.js')
+      'viz.render.js': path.join(__dirname, 'node_modules/viz.js/full.render.js'),
+      markdownlint: path.join(__dirname, 'node_modules/markdownlint/demo/markdownlint-browser.js')
     }
   },
 

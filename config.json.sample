@@ -1,0 +1,42 @@
+{
+    "test": {
+        "db": {
+            "dialect": "sqlite",
+            "storage": ":memory:"
+        }
+    },
+    "production": {
+        "domain": "$CMD_DOMAIN",
+        "loglevel": "debug",
+        "hsts": {
+            "enable": true,
+            "maxAgeSeconds": 31536000,
+            "includeSubdomains": true,
+            "preload": true
+        },
+        "csp": {
+            "enable": true,
+            "directives": {
+            },
+            "upgradeInsecureRequests": "auto",
+            "addDefaults": true,
+            "addDisqus": true,
+            "addGoogleAnalytics": true
+        },
+        "dburl": "$DATABASE_URL",
+        "github": {
+            "clientID": "change this",
+            "clientSecret": "change this"
+        },
+        "s3": {
+          "accessKeyId": "change this",
+          "secretAccessKey": "change this",
+          "region": "change this"
+        },
+        "s3bucket": "change this",
+        "plantuml":
+        {
+          "server": "https://www.plantuml.com/plantuml"
+        }
+    }
+}

@@ -1,14 +1,17 @@
 ---
 applications:
-- name: hackmd
+- name: paas-codimd
   instances: 1
-  memory: 4G
-  command: npm run build && npm run start
+  memory: 1G
+  command: yarn run start
   buildpacks: 
     - nodejs_buildpack
+  services:
+    - paas-codimd-db  
   env:
-    CF_DB: codimd-psql
+    CF_DB: paas-codimd-db
     CMD_PORT: 8080
+    CMD_DOMAIN: paas-codimd.app.cloud.gov
     NODE_ENV: production
+    CMD_PROTOCOL_USESSL: true
     PGSSLMODE: require
-    UV_THREADPOOL_SIZE: 100
