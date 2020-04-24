@@ -20,16 +20,30 @@ $ git checkout -b some-test-branch
 $ cp config.json.sample config.json
 # ^ this file is git ignored and is where you will copy and paste the github oauth tokens
 ```
-Setup a cloud.gov account, follow instructions to install the cf-cli and login on the command line:
+
+**Install Node/NPM**
+[Check to see what is working in upstream](https://travis-ci.com/github/hackmdio/codimd)
+* [v10 LTS Dubnium](https://nodejs.org/download/release/latest-dubnium/)
+* [v12 LTS Erbium](https://nodejs.org/download/release/latest-erbium/)
+
+**Install yarn and build app**
+```bash
+$ npm install -g yarn
+$ yarn install
+$ yarn run build
+```
+
+**Setup a cloud.gov account, follow instructions to install the cf-cli, and login on the command line:**
 * https://cloud.gov/docs/getting-started/accounts/
 * https://cloud.gov/docs/getting-started/setup/
 
 ```bash
 cf login -a api.fr.cloud.gov  --sso
 ```
-* Copy and Paste the [Temporary Authentication Code](https://login.fr.cloud.gov/passcode)
+* Copy and Paste the [Temporary Authentication Code](https://login.fr.cloud.gov/passcode) when prompted
 * Setup a demo application `space`
 * Create a small shared postgresql database for testing
+* Update manifest.yml file to rename `applications: - name:`
 
 ```bash
 $ cf target -o sandbox-gsa create-space paas-codimd
@@ -37,8 +51,7 @@ $ cf marketplace
 $ cf create-service aws-rds shared-psql paas-codimd-db
 $ cf create-service-key paas-codimd-db paas-codimd-db-test
 $ cf push
-
-
+```
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
