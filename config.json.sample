@@ -5,16 +5,6 @@
             "storage": ":memory:"
         }
     },
-    "development": {
-        "loglevel": "debug",
-        "hsts": {
-            "enable": false
-        },
-        "db": {
-            "dialect": "sqlite",
-            "storage": "./db.codimd.sqlite"
-        }
-    },
     "production": {
         "domain": "$CMD_DOMAIN",
         "loglevel": "debug",

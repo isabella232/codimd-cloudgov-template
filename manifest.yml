@@ -3,12 +3,15 @@ applications:
 - name: paas-codimd
   instances: 1
   memory: 1G
-  command: npm install && npm run build && npm run start
+  command: yarn run start
   buildpacks: 
     - nodejs_buildpack
+  services:
+    - paas-codimd-db  
   env:
     CF_DB: paas-codimd-db
     CMD_PORT: 8080
     CMD_DOMAIN: paas-codimd.app.cloud.gov
     NODE_ENV: production
     CMD_PROTOCOL_USESSL: true
+    PGSSLMODE: require
