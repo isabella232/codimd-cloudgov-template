@@ -11,6 +11,35 @@ Built on [HackMD](https://hackmd.io) source code, CodiMD lets you host and contr
 
 ![screenshot](https://raw.githubusercontent.com/hackmdio/codimd/develop/public/screenshot.png)
 
+## Deploy to Cloud.gov
+
+```bash
+$ git clone https://github.com/18f/paas-codimd
+$ cd paas-codimd
+$ git checkout -b some-test-branch
+$ cp config.json.sample config.json
+# ^ this file is git ignored and is where you will copy and paste the github oauth tokens
+```
+Setup a cloud.gov account, follow instructions to install the cf-cli and login on the command line:
+* https://cloud.gov/docs/getting-started/accounts/
+* https://cloud.gov/docs/getting-started/setup/
+
+```bash
+cf login -a api.fr.cloud.gov  --sso
+```
+* Copy and Paste the [Temporary Authentication Code](https://login.fr.cloud.gov/passcode)
+* Setup a demo application `space`
+* Create a small shared postgresql database for testing
+
+```bash
+$ cf target -o sandbox-gsa create-space paas-codimd
+$ cf marketplace
+$ cf create-service aws-rds shared-psql paas-codimd-db
+$ cf create-service-key paas-codimd-db paas-codimd-db-test
+$ cf push
+
+
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
