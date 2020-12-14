@@ -4,7 +4,7 @@ applications:
   instances: 1
   memory: 1G
   command: yarn run start
-  buildpacks: 
+  buildpacks:
     - nodejs_buildpack
   services:
     - codimd-psql

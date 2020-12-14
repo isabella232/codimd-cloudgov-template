@@ -1,22 +1,74 @@
 /* eslint-env browser, jquery */
+/* eslint no-console: ["error", { allow: ["warn", "error", "debug"] }] */
 /* global serverurl, moment */
 
 import store from 'store'
+<<<<<<< HEAD
 import LZString from '@hackmd/lz-string'
 
 import escapeHTML from 'lodash/escape'
+=======
+import S from 'string'
+import LZString from 'lz-string'
+import url from 'wurl'
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
 import {
   checkNoteIdValid,
   encodeNoteId
 } from './utils'
 
+<<<<<<< HEAD
 import { checkIfAuth } from './lib/common/login'
 
 import { urlpath } from './lib/config'
 
 window.migrateHistoryFromTempCallback = null
 
+=======
+import {
+  checkIfAuth
+} from './lib/common/login'
+
+import {
+  urlpath
+} from './lib/config'
+
+window.migrateHistoryFromTempCallback = null
+
+migrateHistoryFromTemp()
+
+function migrateHistoryFromTemp () {
+  if (url('#tempid')) {
+    $.get(`${serverurl}/temp`, {
+      tempid: url('#tempid')
+    })
+      .done(data => {
+        if (data && data.temp) {
+          getStorageHistory(olddata => {
+            if (!olddata || olddata.length === 0) {
+              saveHistoryToStorage(JSON.parse(data.temp))
+            }
+          })
+        }
+      })
+      .always(() => {
+        let hash = location.hash.split('#')[1]
+        hash = hash.split('&')
+        for (let i = 0; i < hash.length; i++) {
+          if (hash[i].indexOf('tempid') === 0) {
+            hash.splice(i, 1)
+            i--
+          }
+        }
+        hash = hash.join('&')
+        location.hash = hash
+        if (window.migrateHistoryFromTempCallback) { window.migrateHistoryFromTempCallback() }
+      })
+  }
+}
+
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 export function saveHistory (notehistory) {
   checkIfAuth(
     () => {
@@ -239,8 +291,13 @@ function parseToHistory (list, notehistory, callback) {
       notehistory[i].fromNow = timestamp.fromNow()
       notehistory[i].time = timestamp.format('llll')
       // prevent XSS
+<<<<<<< HEAD
       notehistory[i].text = escapeHTML(notehistory[i].text)
       notehistory[i].tags = (notehistory[i].tags && notehistory[i].tags.length > 0) ? escapeHTML(notehistory[i].tags).split(',') : []
+=======
+      notehistory[i].text = S(notehistory[i].text).escapeHTML().s
+      notehistory[i].tags = (notehistory[i].tags && notehistory[i].tags.length > 0) ? S(notehistory[i].tags).escapeHTML().s.split(',') : []
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       // add to list
       if (notehistory[i].id && list.get('id', notehistory[i].id).length === 0) { list.add(notehistory[i]) }
     }

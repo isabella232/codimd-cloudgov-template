@@ -13,7 +13,7 @@
         },
         "db": {
             "dialect": "sqlite",
-            "storage": "./db.codimd.sqlite"
+            "storage": "./db.hedgedoc.sqlite"
         },
         "linkifyHeaderStyle": "gfm"
     },
@@ -35,10 +35,11 @@
             "addDisqus": true,
             "addGoogleAnalytics": true
         },
+        "cookiePolicy": "lax",
         "db": {
             "username": "",
             "password": "",
-            "database": "codimd",
+            "database": "hedgedoc",
             "host": "localhost",
             "port": "5432",
             "dialect": "postgres"
@@ -93,7 +94,7 @@
         "saml": {
             "idpSsoUrl": "change: authentication endpoint of IdP",
             "idpCert": "change: certificate file path of IdP in PEM format",
-            "issuer": "change or delete: identity of the service provider (default: serverurl)",
+            "issuer": "change or delete: identity of the service provider (default: config.serverURL)",
             "identifierFormat": "change or delete: name identifier format (default: 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress')",
             "disableRequestedAuthnContext": "change or delete: true to allow any authentication method, false restricts to password authentication method (default: false)",
             "groupAttribute": "change or delete: attribute name for group list (ex: memberOf)",

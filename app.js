@@ -21,7 +21,7 @@ var flash = require('connect-flash')
 // core
 var config = require('./lib/config')
 var logger = require('./lib/logger')
-var response = require('./lib/response')
+var errors = require('./lib/errors')
 var models = require('./lib/models')
 var csp = require('./lib/csp')
 const { Environment } = require('./lib/config/enum')
@@ -52,9 +52,12 @@ function createHttpServer () {
   }
 }
 
-// server setup
-var app = express()
-var server = createHttpServer()
+// if we manage to provide HTTPS domains, but don't provide TLS ourselves
+// obviously a proxy is involded. In order to make sure express is aware of
+// this, we provide the option to trust proxies here.
+if (!config.useSSL && config.protocolUseSSL) {
+  app.set('trust proxy', 1)
+}
 
 // logger
 app.use(morgan('combined', {
@@ -62,7 +65,7 @@ app.use(morgan('combined', {
 }))
 
 // socket io
-var io = require('socket.io')(server)
+var io = require('socket.io')(server, { cookie: false })
 io.engine.ws = new (require('ws').Server)({
   noServer: true,
   perMessageDeflate: false
@@ -86,7 +89,7 @@ var sessionStore = new SequelizeStore({
 if (config.hsts.enable) {
   app.use(helmet.hsts({
     maxAge: config.hsts.maxAgeSeconds,
-    includeSubdomains: config.hsts.includeSubdomains,
+    includeSubDomains: config.hsts.includeSubdomains,
     preload: config.hsts.preload
   }))
 } else if (config.useSSL) {
@@ -115,8 +118,9 @@ if (config.csp.enable) {
 }
 
 i18n.configure({
-  locales: ['en', 'zh-CN', 'zh-TW', 'fr', 'de', 'ja', 'es', 'ca', 'el', 'pt', 'it', 'tr', 'ru', 'nl', 'hr', 'pl', 'uk', 'hi', 'sv', 'eo', 'da', 'ko', 'id', 'sr'],
+  locales: ['en', 'zh-CN', 'zh-TW', 'fr', 'de', 'ja', 'es', 'ca', 'el', 'pt', 'it', 'tr', 'ru', 'nl', 'hr', 'pl', 'uk', 'hi', 'sv', 'eo', 'da', 'ko', 'id', 'sr', 'vi', 'ar', 'cs', 'sk', 'ml'],
   cookie: 'locale',
+  indent: '    ', // this is the style poeditor.com exports it, this creates less churn
   directory: path.join(__dirname, '/locales'),
   updateFiles: config.updateI18nFiles
 })
@@ -127,9 +131,9 @@ app.use(i18n.init)
 
 // routes without sessions
 // static files
-app.use('/', express.static(path.join(__dirname, '/public'), { maxAge: config.staticCacheTime, index: false }))
-app.use('/docs', express.static(path.resolve(__dirname, config.docsPath), { maxAge: config.staticCacheTime }))
-app.use('/uploads', express.static(path.resolve(__dirname, config.uploadsPath), { maxAge: config.staticCacheTime }))
+app.use('/', express.static(path.join(__dirname, '/public'), { maxAge: config.staticCacheTime, index: false, redirect: false }))
+app.use('/docs', express.static(path.resolve(__dirname, config.docsPath), { maxAge: config.staticCacheTime, redirect: false }))
+app.use('/uploads', express.static(path.resolve(__dirname, config.uploadsPath), { maxAge: config.staticCacheTime, redirect: false }))
 app.use('/default.md', express.static(path.resolve(__dirname, config.defaultNotePath), { maxAge: config.staticCacheTime }))
 
 // session
@@ -140,7 +144,9 @@ app.use(session({
   saveUninitialized: true, // always create session to ensure the origin
   rolling: true, // reset maxAge on every response
   cookie: {
-    maxAge: config.sessionLife
+    maxAge: config.sessionLife,
+    sameSite: config.cookiePolicy, // be careful: setting a SameSite value of none without https breaks the editor
+    secure: config.useSSL || config.protocolUseSSL || false
   },
   store: sessionStore
 }))
@@ -167,13 +173,8 @@ app.use(passport.session())
 // check uri is valid before going further
 app.use(require('./lib/middleware/checkURIValid'))
 // redirect url without trailing slashes
-app.use(require('./lib/middleware/redirectWithoutTrailingSlashes'))
-app.use(require('./lib/middleware/codiMDVersion'))
-
-if (config.autoVersionCheck && process.env.NODE_ENV === Environment.production) {
-  checkVersion(app)
-  app.use(versionCheckMiddleware)
-}
+app.use(require('./lib/web/middleware/redirectWithoutTrailingSlashes'))
+app.use(require('./lib/web/middleware/hedgeDocVersion'))
 
 // routes need sessions
 // template files
@@ -188,8 +189,6 @@ app.locals.serverURL = config.serverURL
 app.locals.sourceURL = config.sourceURL
 app.locals.allowAnonymous = config.allowAnonymous
 app.locals.allowAnonymousEdits = config.allowAnonymousEdits
-app.locals.permission = config.permission
-app.locals.allowPDFExport = config.allowPDFExport
 app.locals.authProviders = {
   facebook: config.isFacebookEnable,
   twitter: config.isTwitterEnable,
@@ -218,11 +217,17 @@ app.locals.enableDropBoxSave = config.isDropboxEnable
 app.locals.enableGitHubGist = config.isGitHubEnable
 app.locals.enableGitlabSnippets = config.isGitlabSnippetsEnable
 
-app.use(require('./lib/routes').router)
+app.use(require('./lib/web/baseRouter'))
+app.use(require('./lib/web/statusRouter'))
+app.use(require('./lib/web/auth'))
+app.use(require('./lib/web/historyRouter'))
+app.use(require('./lib/web/userRouter'))
+app.use(require('./lib/web/imageRouter'))
+app.use(require('./lib/web/note/router'))
 
 // response not found if no any route matxches
 app.get('*', function (req, res) {
-  response.errorNotFound(req, res)
+  errors.errorNotFound(res)
 })
 
 // socket.io secure
@@ -284,7 +289,7 @@ process.on('uncaughtException', function (err) {
 
 // install exit handler
 function handleTermSignals () {
-  logger.info('CodiMD has been killed by signal, try to exit gracefully...')
+  logger.info('HedgeDoc has been killed by signal, try to exit gracefully...')
   realtime.maintenance = true
   realtime.terminate()
   // disconnect all socket.io clients
@@ -296,6 +301,9 @@ function handleTermSignals () {
       socket.disconnect(true)
     }, 0)
   })
+  if (config.path) {
+    fs.unlink(config.path)
+  }
   var checkCleanTimer = setInterval(function () {
     if (realtime.isReady()) {
       models.Revision.checkAllNotesRevision(function (err, notes) {

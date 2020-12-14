@@ -2,11 +2,25 @@
 
 set -e
 
+<<<<<<< HEAD
 if [ ! -z "$DYNO" ]; then
   # setup config files
   cp .sequelizerc.example .sequelizerc
+=======
+cat << EOF > .sequelizerc
+var path = require('path');
 
-    cat << EOF > config.json
+module.exports = {
+    'config':          path.resolve('config.json'),
+    'migrations-path': path.resolve('lib', 'migrations'),
+    'models-path':     path.resolve('lib', 'models'),
+    'url':             process.env.DATABASE_URL
+}
+
+EOF
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
+
+cat << EOF > config.json
 
 {
   "production": {
@@ -14,5 +28,8 @@ if [ ! -z "$DYNO" ]; then
 }
 
 EOF
+<<<<<<< HEAD
 
 fi
+=======
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870

@@ -360,7 +360,11 @@ export function syncScrollToView (event, preventAnimate) {
   let topDiffPercent, posToNextDiff
   const scrollInfo = editor.getScrollInfo()
   const textHeight = editor.defaultTextHeight()
+<<<<<<< HEAD
   const lineNo = Math.floor(scrollInfo.top / textHeight)
+=======
+  lineNo = Math.floor(scrollInfo.top / textHeight)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   // if reach the last line, will start lerp to the bottom
   const diffToBottom = (scrollInfo.top + scrollInfo.clientHeight) - (scrollInfo.height - textHeight)
   if (scrollInfo.height > scrollInfo.clientHeight && diffToBottom > 0) {

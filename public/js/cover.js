@@ -32,6 +32,11 @@ require('./locale')
 require('../css/cover.css')
 require('../css/site.css')
 
+require('./locale')
+
+require('../css/cover.css')
+require('../css/site.css')
+
 const options = {
   valueNames: ['id', 'text', 'timestamp', 'fromNow', 'time', 'tags', 'pinned'],
   item: `<li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
@@ -318,7 +323,7 @@ $('.ui-save-history').click(() => {
     const blob = new Blob([history], {
       type: 'application/json;charset=utf-8'
     })
-    saveAs(blob, `codimd_history_${moment().format('YYYYMMDDHHmmss')}`, true)
+    saveAs(blob, `hedgedoc_history_${moment().format('YYYYMMDDHHmmss')}`, true)
   })
 })
 
@@ -427,4 +432,18 @@ $('.ui-use-tags').on('change', function () {
 
 $('.search').keyup(() => {
   checkHistoryList()
+})
+
+// focus user field after opening login modal
+$('.signin-modal').on('shown.bs.modal', function () {
+  let fieldLDAP = $('input[name=username]')
+  let fieldEmail = $('input[name=email]')
+  let fieldOpenID = $('input[name=openid_identifier]')
+  if (fieldLDAP.length === 1) {
+    fieldLDAP.focus()
+  } else if (fieldEmail.length === 1) {
+    fieldEmail.focus()
+  } else if (fieldOpenID.length === 1) {
+    fieldOpenID.focus()
+  }
 })

@@ -2,23 +2,55 @@
 
 set -e
 
+version_lt() { test "$(printf '%s\n' "$@" | { [ "$(uname)" = "Linux" ] && (sort -V || sort -t. -k 1,1n -k 2,2n -k 3,3n -k 4,4n;) } | tail -n 1)" != "$1"; }
+
 # run command at repo root
 CURRENT_PATH=$PWD
 if [ -d .git ]; then
   cd "$(git rev-parse --show-toplevel)"
 fi
 
+<<<<<<< HEAD
 if ! type npm > /dev/null
 then
   cat << EOF
 npm is not installed, please install Node.js and npm.
 Read more on Node.js official website: https://nodejs.org
 Setup will not be run
+=======
+if ! type yarn > /dev/null; then
+  cat << EOF
+FATAL: Yarn could not be found.
+
+Please follow the official installation instructions at
+https://classic.yarnpkg.com/en/docs/install
+and try again.
 EOF
-  exit 0
+  exit 1
 fi
 
-echo "copy config files"
+if version_lt "$(yarn --version)" '1.22.0'; then
+  cat << EOF
+FATAL: Your Yarn version is outdated.
+
+Please upgrade to version 1.22.0 or higher and try again.
+See https://classic.yarnpkg.com/en/docs/install for instructions.
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
+EOF
+  exit 1
+fi
+
+if version_lt "$(node --version)" 'v10.13.0'; then
+  cat << EOF
+FATAL: Your Node.js version is outdated.
+
+Please upgrade to version 10.13 or higher and try again.
+We recommend running the latest LTS release, see https://nodejs.org/en/about/releases/ for details.
+EOF
+  exit 1
+fi
+
+echo "Copying config files..."
 if [ ! -f config.json ]; then
   cp config.json.example config.json
 fi
@@ -27,18 +59,28 @@ if [ ! -f .sequelizerc ]; then
   cp .sequelizerc.example .sequelizerc
 fi
 
+<<<<<<< HEAD
 echo "install packages"
 npm install
+=======
+echo "Installing packages..."
+yarn install --pure-lockfile
+yarn install --production=false --pure-lockfile
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
 cat << EOF
 
 
+<<<<<<< HEAD
 Edit the following config file to setup CodiMD server and client.
 Read more info at https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-configuration
+=======
+Edit the following config file to setup HedgeDoc server and client.
+Read more info at https://github.com/hedgedoc/hedgedoc#configuration-files
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
-* config.json           -- CodiMD config
+* config.json           -- HedgeDoc config
 * .sequelizerc          -- db config
-
 EOF
 
 # change directory back

@@ -1,4 +1,5 @@
 /* eslint-env browser, jquery */
+<<<<<<< HEAD
 /* global moment, serverurl, plantumlServer, L */
 
 import Prism from 'prismjs'
@@ -21,6 +22,25 @@ import markdownitContainer from 'markdown-it-container'
 
 /* Defined regex markdown it plugins */
 import Plugin from 'markdown-it-regexp'
+=======
+/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
+/* global moment, serverurl */
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
+
+import Prism from 'prismjs'
+import hljs from 'highlight.js'
+import PDFObject from 'pdfobject'
+import S from 'string'
+import { saveAs } from 'file-saver'
+import escapeHTML from 'escape-html'
+
+import getUIElements from './lib/editor/ui-elements'
+
+import markdownit from 'markdown-it'
+import markdownitContainer from 'markdown-it-container'
+
+/* Defined regex markdown it plugins */
+import Plugin from 'markdown-it-regexp'
 
 require('prismjs/themes/prism.css')
 require('prismjs/components/prism-wiki')
@@ -32,17 +52,23 @@ require('prismjs/components/prism-makefile')
 require('prismjs/components/prism-gherkin')
 
 require('./lib/common/login')
+require('./locale')
 require('../vendor/md-toc')
+<<<<<<< HEAD
 let viz = new window.Viz()
 const plantumlEncoder = require('plantuml-encoder')
 
+=======
+var Viz = require('viz.js')
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 const ui = getUIElements()
 
 // auto update last change
 window.createtime = null
 window.lastchangetime = null
 window.lastchangeui = {
-  status: $('.ui-status-lastchange'),
+  statusChanged: $('.ui-status-lastchange.changed'),
+  statusCreated: $('.ui-status-lastchange.created'),
   time: $('.ui-lastchange'),
   user: $('.ui-lastchangeuser'),
   nouser: $('.ui-no-lastchangeuser')
@@ -54,9 +80,11 @@ export function updateLastChange () {
   if (!window.lastchangeui) return
   if (window.createtime) {
     if (window.createtime && !window.lastchangetime) {
-      window.lastchangeui.status.text('created')
+      window.lastchangeui.statusChanged.hide()
+      window.lastchangeui.statusCreated.show()
     } else {
-      window.lastchangeui.status.text('changed')
+      window.lastchangeui.statusChanged.show()
+      window.lastchangeui.statusCreated.hide()
     }
     const time = window.lastchangetime || window.createtime
     window.lastchangeui.time.html(moment(time).fromNow())
@@ -120,9 +148,9 @@ function getTitle (view) {
 export function renderTitle (view) {
   let title = getTitle(view)
   if (title) {
-    title += ' - CodiMD'
+    title += ' - HedgeDoc'
   } else {
-    title = 'CodiMD - Collaborative markdown notes'
+    title = 'HedgeDoc - Collaborative markdown notes'
   }
   return title
 }
@@ -172,7 +200,11 @@ export function renderTags (view) {
 
 function slugifyWithUTF8 (text) {
   // remove HTML tags and trim spaces
+<<<<<<< HEAD
   let newText = stripTags(text.toString().trim())
+=======
+  let newText = S(text).trim().stripTags().s
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   // replace space between words with dashes
   newText = newText.replace(/\s+/g, '-')
   // slugify string to make it valid as an attribute
@@ -180,6 +212,18 @@ function slugifyWithUTF8 (text) {
   return newText
 }
 
+<<<<<<< HEAD
+=======
+export function isValidURL (str) {
+  try {
+    const url = new URL(str)
+    return ['http:', 'https:'].includes(url.protocol)
+  } catch (e) {
+    return false
+  }
+}
+
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 // parse meta
 export function parseMeta (md, edit, view, toc, tocAffix) {
   let lang = null
@@ -214,8 +258,13 @@ export function parseMeta (md, edit, view, toc, tocAffix) {
     tocAffix.removeAttr('dir')
   }
   // breaks
+<<<<<<< HEAD
   if (typeof breaks === 'boolean') {
     md.options.breaks = breaks
+=======
+  if (typeof breaks === 'boolean' && !breaks) {
+    md.options.breaks = false
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   } else {
     md.options.breaks = window.defaultUseHardbreak
   }
@@ -260,9 +309,15 @@ export function finishView (view) {
     li.innerHTML = html
     let disabled = 'disabled'
     if (typeof editor !== 'undefined' && window.havePermission()) { disabled = '' }
+<<<<<<< HEAD
     if (/^\s*\[[x ]]\s*/.test(html)) {
       li.innerHTML = html.replace(/^\s*\[ ]\s*/, `<input type="checkbox" class="task-list-item-checkbox "${disabled}><label></label>`)
         .replace(/^\s*\[x]\s*/, `<input type="checkbox" class="task-list-item-checkbox" checked ${disabled}><label></label>`)
+=======
+    if (/^\s*\[[x ]\]\s*/.test(html)) {
+      li.innerHTML = html.replace(/^\s*\[ \]\s*/, `<input type="checkbox" class="task-list-item-checkbox "${disabled}><label></label>`)
+        .replace(/^\s*\[x\]\s*/, `<input type="checkbox" class="task-list-item-checkbox" checked ${disabled}><label></label>`)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       if (li.tagName.toLowerCase() !== 'li') {
         li.parentElement.setAttribute('class', 'task-list-item')
       } else {
@@ -373,7 +428,11 @@ export function finishView (view) {
           console.warn(err)
         })
     } catch (err) {
+<<<<<<< HEAD
       viz = new window.Viz()
+=======
+      $value.unwrap()
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       $value.parent().append(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
       console.warn(err)
     }
@@ -391,8 +450,13 @@ export function finishView (view) {
       window.mermaid.init(undefined, $ele)
     } catch (err) {
       $value.unwrap()
+<<<<<<< HEAD
       $value.parent().append(`<div class="alert alert-warning">${escapeHTML(err.str)}</div>`)
       console.warn(err)
+=======
+      $value.parent().append(`<div class="alert alert-warning">${escapeHTML(errormessage)}</div>`)
+      console.warn(errormessage)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     }
   })
   // abc.js
@@ -415,6 +479,7 @@ export function finishView (view) {
       console.warn(err)
     }
   })
+<<<<<<< HEAD
   // vega-lite
   const vegas = view.find('div.vega.raw').removeClass('raw')
   vegas.each((key, value) => {
@@ -483,6 +548,8 @@ export function finishView (view) {
     }
   })
 
+=======
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   // image href new window(emoji not included)
   const images = view.find('img.raw[src]').removeClass('raw')
   images.each((key, value) => {
@@ -563,22 +630,38 @@ export function finishView (view) {
             value: code
           }
         } else if (reallang === 'haskell' || reallang === 'go' || reallang === 'typescript' || reallang === 'jsx' || reallang === 'gherkin') {
+<<<<<<< HEAD
           code = unescapeHTML(code)
+=======
+          code = S(code).unescapeHTML().s
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
           result = {
             value: Prism.highlight(code, Prism.languages[reallang])
           }
         } else if (reallang === 'tiddlywiki' || reallang === 'mediawiki') {
+<<<<<<< HEAD
           code = unescapeHTML(code)
+=======
+          code = S(code).unescapeHTML().s
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
           result = {
             value: Prism.highlight(code, Prism.languages.wiki)
           }
         } else if (reallang === 'cmake') {
+<<<<<<< HEAD
           code = unescapeHTML(code)
+=======
+          code = S(code).unescapeHTML().s
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
           result = {
             value: Prism.highlight(code, Prism.languages.makefile)
           }
         } else {
+<<<<<<< HEAD
           code = unescapeHTML(code)
+=======
+          code = S(code).unescapeHTML().s
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
           const languages = hljs.listLanguages()
           if (!languages.includes(reallang)) {
             result = hljs.highlightAuto(code)
@@ -603,12 +686,15 @@ export function finishView (view) {
   } catch (err) {
     console.warn(err)
   }
+<<<<<<< HEAD
 
   // register details toggle for scrollmap recalulation
   view.find('details.raw').removeClass('raw').each(function (key, val) {
     $(val).on('toggle', window.viewAjaxCallback)
   })
 
+=======
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   // render title
   document.title = renderTitle(view)
 }
@@ -741,7 +827,10 @@ export function exportToHTML (view) {
         dir: (md && md.meta && md.meta.dir) ? `dir="${md.meta.dir}"` : null
       }
       const html = template(context)
+<<<<<<< HEAD
       //        console.log(html);
+=======
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       const blob = new Blob([html], {
         type: 'text/html;charset=utf-8'
       })
@@ -1066,7 +1155,11 @@ function highlightRender (code, lang) {
   return result.value
 }
 
+<<<<<<< HEAD
 export const md = markdownit('default', {
+=======
+export let md = markdownit('default', {
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   html: true,
   breaks: window.defaultUseHardbreak,
   langPrefix: '',
@@ -1179,6 +1272,7 @@ md.renderer.rules.fence = (tokens, idx, options, env, self) => {
   return `<pre><code${self.renderAttrs(token)}>${highlighted}</code></pre>\n`
 }
 
+<<<<<<< HEAD
 const makePlantumlURL = (umlCode) => {
   const format = 'svg'
   const code = plantumlEncoder.encode(umlCode)
@@ -1206,6 +1300,8 @@ md.core.ruler.push('plantuml', (state) => {
   }
 })
 
+=======
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 // youtube
 const youtubePlugin = new Plugin(
   // regexp to match
@@ -1230,7 +1326,11 @@ const vimeoPlugin = new Plugin(
   /{%vimeo\s*([\d\D]*?)\s*%}/,
 
   (match, utils) => {
+<<<<<<< HEAD
     const videoid = match[1].split(/[?&=]+/)[0]
+=======
+    const videoid = match[1]
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     if (!videoid) return
     const div = $('<div class="vimeo raw"></div>')
     div.attr('data-videoid', videoid)
@@ -1245,7 +1345,11 @@ const gistPlugin = new Plugin(
   /{%gist\s*([\d\D]*?)\s*%}/,
 
   (match, utils) => {
+<<<<<<< HEAD
     const gistid = match[1].split(/[?&=]+/)[0]
+=======
+    const gistid = match[1]
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     const code = `<code data-gist-id="${gistid}"></code>`
     return code
   }
@@ -1263,7 +1367,11 @@ const slidesharePlugin = new Plugin(
   /{%slideshare\s*([\d\D]*?)\s*%}/,
 
   (match, utils) => {
+<<<<<<< HEAD
     const slideshareid = match[1].split(/[?&=]+/)[0]
+=======
+    const slideshareid = match[1]
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     const div = $('<div class="slideshare raw"></div>')
     div.attr('data-slideshareid', slideshareid)
     return div[0].outerHTML
@@ -1288,7 +1396,11 @@ const pdfPlugin = new Plugin(
 
   (match, utils) => {
     const pdfurl = match[1]
+<<<<<<< HEAD
     if (!isURL(pdfurl)) return match[0]
+=======
+    if (!isValidURL(pdfurl)) return match[0]
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     const div = $('<div class="pdf raw"></div>')
     div.attr('data-pdfurl', pdfurl)
     return div[0].outerHTML
@@ -1303,7 +1415,11 @@ const emojijsPlugin = new Plugin(
 
   (match, utils) => {
     const emoji = match[1].toLowerCase()
+<<<<<<< HEAD
     const div = $(`<img class="emoji" alt=":${emoji}:" src="${emojifyImageDir}/${emoji}.png"></img>`)
+=======
+    const div = $(`<img class="emoji" alt=":${emoji}:" src="${serverurl}/build/emojify.js/dist/images/basic/${emoji}.png"></img>`)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     return div[0].outerHTML
   }
 )

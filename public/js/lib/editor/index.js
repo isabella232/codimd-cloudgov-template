@@ -11,6 +11,8 @@ import CodeMirrorSpellChecker, { supportLanguages, supportLanguageCodes } from '
 import { initTableEditor } from './table-editor'
 import { availableThemes } from './constants'
 
+import '../../../css/ui/toolbar.css'
+
 /* config section */
 const isMac = CodeMirror.keyMap.default === CodeMirror.keyMap.macDefault
 const defaultEditorMode = 'gfm'
@@ -157,6 +159,7 @@ export default class Editor {
   }
 
   addToolBar () {
+    var inlineAttach = inlineAttachment.editors.codemirror4.attach(this.editor)
     this.toolBar = $(toolBarTemplate)
     this.toolbarPanel = this.editor.addPanel(this.toolBar[0], {
       position: 'top'
@@ -176,6 +179,7 @@ export default class Editor {
     var makeTable = $('#makeTable')
     var makeLine = $('#makeLine')
     var makeComment = $('#makeComment')
+    var uploadImage = $('#uploadImage')
 
     var insertRow = $('#insertRow')
     var deleteRow = $('#deleteRow')
@@ -250,6 +254,7 @@ export default class Editor {
       utils.insertText(this.editor, '> []')
     })
 
+<<<<<<< HEAD
     // table tools UI
     const opts = options({
       smartCursor: true,
@@ -314,6 +319,13 @@ export default class Editor {
     alignNone.click(() => {
       this.tableEditor.alignColumn(Alignment.NONE, opts)
       this.editor.focus()
+=======
+    uploadImage.bind('change', function (e) {
+      var files = e.target.files || e.dataTransfer.files
+      e.dataTransfer = {}
+      e.dataTransfer.files = files
+      inlineAttach.onDrop(e)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     })
   }
 
@@ -409,12 +421,14 @@ export default class Editor {
     const setType = () => {
       if (this.editor.getOption('indentWithTabs')) {
         Cookies.set('indent_type', 'tab', {
-          expires: 365
+          expires: 365,
+          sameSite: window.cookiePolicy
         })
         type.text('Tab Size:')
       } else {
         Cookies.set('indent_type', 'space', {
-          expires: 365
+          expires: 365,
+          sameSite: window.cookiePolicy
         })
         type.text('Spaces:')
       }
@@ -425,11 +439,13 @@ export default class Editor {
       var unit = this.editor.getOption('indentUnit')
       if (this.editor.getOption('indentWithTabs')) {
         Cookies.set('tab_size', unit, {
-          expires: 365
+          expires: 365,
+          sameSite: window.cookiePolicy
         })
       } else {
         Cookies.set('space_units', unit, {
-          expires: 365
+          expires: 365,
+          sameSite: window.cookiePolicy
         })
       }
       widthLabel.text(unit)
@@ -497,7 +513,8 @@ export default class Editor {
     const setKeymapLabel = () => {
       var keymap = this.editor.getOption('keyMap')
       Cookies.set('keymap', keymap, {
-        expires: 365
+        expires: 365,
+        sameSite: window.cookiePolicy
       })
       label.text(keymap)
       this.restoreOverrideEditorKeymap()
@@ -532,7 +549,8 @@ export default class Editor {
     const setTheme = theme => {
       this.editor.setOption('theme', theme)
       Cookies.set('theme', theme, {
-        expires: 365
+        expires: 365,
+        sameSite: window.cookiePolicy
       })
       this.statusIndicators.find('.status-theme li').removeClass('active')
       this.statusIndicators.find(`.status-theme li[value="${theme}"]`).addClass('active')
@@ -647,6 +665,13 @@ export default class Editor {
 
         self.editor.setOption('mode', 'spell-checker')
       }
+<<<<<<< HEAD
+=======
+      Cookies.set('spellcheck', mode === 'spell-checker', {
+        expires: 365,
+        sameSite: window.cookiePolicy
+      })
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
       self.setSpellcheckLang(lang)
     })
@@ -712,7 +737,8 @@ export default class Editor {
     )
     if (overrideBrowserKeymap.is(':checked')) {
       Cookies.set('preferences-override-browser-keymap', true, {
-        expires: 365
+        expires: 365,
+        sameSite: window.cookiePolicy
       })
       this.restoreOverrideEditorKeymap()
     } else {

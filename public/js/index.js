@@ -1,6 +1,12 @@
 /* eslint-env browser, jquery */
+<<<<<<< HEAD
 /* global CodeMirror, Cookies, moment, serverurl,
    key, Dropbox, ot, hex2rgb, Visibility, inlineAttachment */
+=======
+/* eslint no-console: ["error", { allow: ["warn", "error", "debug"] }] */
+/* global CodeMirror, Cookies, moment, Spinner, Idle, serverurl,
+   key, Dropbox, ot, hex2rgb, Visibility */
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
 import TurndownService from 'turndown'
 
@@ -8,6 +14,7 @@ import { saveAs } from 'file-saver'
 import randomColor from 'randomcolor'
 import store from 'store'
 import hljs from 'highlight.js'
+import url from 'wurl'
 
 import isURL from 'validator/lib/isURL'
 
@@ -43,6 +50,10 @@ import {
   removeDOMEvents,
   finishView,
   generateToc,
+<<<<<<< HEAD
+=======
+  isValidURL,
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   md,
   parseMeta,
   postProcess,
@@ -87,7 +98,10 @@ require('../css/index.css')
 require('../css/extra.css')
 require('../css/slide-preview.css')
 require('../css/site.css')
+<<<<<<< HEAD
 require('spin.js/spin.css')
+=======
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
 require('highlight.js/styles/github-gist.css')
 
@@ -313,7 +327,6 @@ var editor = editorInstance.init(textit)
 // FIXME: global referncing in jquery-textcomplete patch
 window.editor = editor
 
-var inlineAttach = inlineAttachment.editors.codemirror4.attach(editor)
 defaultTextHeight = parseInt($('.CodeMirror').css('line-height'))
 
 //  initalize ui reference
@@ -808,7 +821,6 @@ function changeMode (type) {
     editor.getInputField().blur()
   }
   if (appState.currentMode === modeType.edit || appState.currentMode === modeType.both) {
-    ui.toolbar.uploadImage.fadeIn()
     // add and update status bar
     if (!editorInstance.statusBar) {
       editorInstance.addStatusBar()
@@ -821,8 +833,6 @@ function changeMode (type) {
     // work around foldGutter might not init properly
     editor.setOption('foldGutter', false)
     editor.setOption('foldGutter', true)
-  } else {
-    ui.toolbar.uploadImage.fadeOut()
   }
   if (appState.currentMode !== modeType.edit) {
     $(document.body).css('background-color', 'white')
@@ -950,6 +960,7 @@ ui.toolbar.download.rawhtml.click(function (e) {
   e.stopPropagation()
   exportToRawHTML(ui.area.markdown)
 })
+<<<<<<< HEAD
 // pdf
 ui.toolbar.download.pdf.attr('download', '').attr('href', noteurl + '/pdf')
 
@@ -961,8 +972,11 @@ ui.modal.pandocExport.find('#pandoc-export-download').click(function (e) {
   window.open(`${noteurl}/pandoc?exportType=${exportType}`, '_blank')
 })
 
+=======
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 // export to dropbox
-ui.toolbar.export.dropbox.click(function () {
+ui.toolbar.export.dropbox.click(function (event) {
+  event.preventDefault()
   var filename = renderFilename(ui.area.markdown) + '.md'
   var options = {
     files: [
@@ -1014,7 +1028,8 @@ ui.toolbar.export.snippet.click(function () {
     })
 })
 // import from dropbox
-ui.toolbar.import.dropbox.click(function () {
+ui.toolbar.import.dropbox.click(function (event) {
+  event.preventDefault()
   var options = {
     success: function (files) {
       ui.spinner.show()
@@ -1066,6 +1081,7 @@ ui.toolbar.import.snippet.click(function () {
     .always(function () {
       ui.spinner.hide()
     })
+<<<<<<< HEAD
 })
 // import from clipboard
 ui.toolbar.import.clipboard.click(function () {
@@ -1077,6 +1093,8 @@ ui.toolbar.uploadImage.bind('change', function (e) {
   e.dataTransfer = {}
   e.dataTransfer.files = files
   inlineAttach.onDrop(e)
+=======
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 })
 // toc
 ui.toc.dropdown.click(function (e) {
@@ -1105,7 +1123,12 @@ ui.modal.revision.on('show.bs.modal', function (e) {
     })
     .fail(function (err) {
       if (debug) {
+<<<<<<< HEAD
         console.log(err)
+=======
+        // eslint-disable-next-line no-console
+        console.debug(err)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       }
     })
     .always(function () {
@@ -1131,7 +1154,7 @@ function parseRevisions (_revisions) {
     revisionList.html('')
     for (var i = 0; i < revisions.length; i++) {
       var revision = revisions[i]
-      var item = $('<a href="#" class="list-group-item"></a>')
+      var item = $('<a class="list-group-item"></a>')
       item.attr('data-revision-time', revision.time)
       if (lastRevision === revision.time) item.addClass('active')
       var itemHeading = $('<h5 class="list-group-item-heading"></h5>')
@@ -1215,7 +1238,12 @@ function selectRevision (time) {
     })
     .fail(function (err) {
       if (debug) {
+<<<<<<< HEAD
         console.log(err)
+=======
+        // eslint-disable-next-line no-console
+        console.debug(err)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       }
     })
     .always(function () {
@@ -1275,7 +1303,12 @@ ui.modal.snippetImportProjects.change(function () {
     })
     .fail(function (err) {
       if (debug) {
+<<<<<<< HEAD
         console.log(err)
+=======
+        // eslint-disable-next-line no-console
+        console.debug(err)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       }
     })
     .always(function () {
@@ -1404,12 +1437,20 @@ $('#gistImportModalConfirm').click(function () {
   if (!isURL(gisturl)) {
     showMessageModal('<i class="fa fa-github"></i> Import from Gist', 'Not a valid URL :(', '', '', false)
   } else {
+<<<<<<< HEAD
     var hostname = wurl('hostname', gisturl)
+=======
+    var hostname = url('hostname', gisturl)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     if (hostname !== 'gist.github.com') {
       showMessageModal('<i class="fa fa-github"></i> Import from Gist', 'Not a valid Gist URL :(', '', '', false)
     } else {
       ui.spinner.show()
+<<<<<<< HEAD
       $.get('https://api.github.com/gists/' + wurl('-1', gisturl))
+=======
+      $.get('https://api.github.com/gists/' + url('-1', gisturl))
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
         .done(function (data) {
           if (data.files) {
             var contents = ''
@@ -1533,7 +1574,11 @@ function replaceAll (data) {
 }
 
 function importFromUrl (url) {
+<<<<<<< HEAD
   // console.log(url);
+=======
+  // console.debug(url);
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   if (!url) return
   if (!isURL(url)) {
     showMessageModal('<i class="fa fa-cloud-download"></i> Import from URL', 'Not a valid URL :(', '', '', false)
@@ -1622,7 +1667,8 @@ function toggleNightMode () {
     store.set('nightMode', !isActive)
   } else {
     Cookies.set('nightMode', !isActive, {
-      expires: 365
+      expires: 365,
+      sameSite: window.cookiePolicy
     })
   }
 }
@@ -1798,8 +1844,13 @@ var authorship = []
 var authorMarks = {} // temp variable
 var addTextMarkers = [] // temp variable
 function updateInfo (data) {
+<<<<<<< HEAD
   // console.log(data);
   if (Object.hasOwnProperty.call(data, 'createtime') && window.createtime !== data.createtime) {
+=======
+  // console.debug(data);
+  if (data.hasOwnProperty('createtime') && window.createtime !== data.createtime) {
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     window.createtime = data.createtime
     updateLastChange()
   }
@@ -2023,7 +2074,7 @@ editorInstance.on('update', function () {
   })
 })
 socket.on('check', function (data) {
-  // console.log(data);
+  // console.debug(data);
   updateInfo(data)
 })
 socket.on('permission', function (data) {
@@ -2032,7 +2083,11 @@ socket.on('permission', function (data) {
 
 var permission = null
 socket.on('refresh', function (data) {
+<<<<<<< HEAD
   // console.log(data);
+=======
+  // console.debug(data);
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   editorInstance.config.docmaxlength = data.docmaxlength
   editor.setOption('maxLength', editorInstance.config.docmaxlength)
   updateInfo(data)
@@ -2770,6 +2825,7 @@ function updateViewInner () {
   delete md.metaError
   var rendered = md.render(value)
   if (md.meta.type && md.meta.type === 'slide') {
+    ui.area.view.addClass('black')
     var slideOptions = {
       separator: '^(\r\n?|\n)---(\r\n?|\n)$',
       verticalSeparator: '^(\r\n?|\n)----(\r\n?|\n)$'
@@ -2786,6 +2842,7 @@ function updateViewInner () {
     if (lastMeta.type && lastMeta.type === 'slide') {
       refreshView()
       ui.area.markdown.removeClass('slides')
+      ui.area.view.removeClass('black')
       appState.syncscroll = true
       checkSyncToggle()
     }
@@ -2847,8 +2904,13 @@ function partialUpdate (src, tar, des) {
       var rawSrc = cloneAndRemoveDataAttr(src[i])
       var rawTar = cloneAndRemoveDataAttr(tar[i])
       if (rawSrc.outerHTML !== rawTar.outerHTML) {
+<<<<<<< HEAD
         // console.log(rawSrc);
         // console.log(rawTar);
+=======
+        // console.debug(rawSrc);
+        // console.debug(rawTar);
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
         $(des[i]).replaceWith(src[i])
       }
     }
@@ -2858,8 +2920,13 @@ function partialUpdate (src, tar, des) {
     for (let i = 0; i < tar.length; i++) {
       // copyAttribute(src[i], des[i], 'data-startline');
       // copyAttribute(src[i], des[i], 'data-endline');
+<<<<<<< HEAD
       const rawSrc = cloneAndRemoveDataAttr(src[i])
       const rawTar = cloneAndRemoveDataAttr(tar[i])
+=======
+      let rawSrc = cloneAndRemoveDataAttr(src[i])
+      let rawTar = cloneAndRemoveDataAttr(tar[i])
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       if (!rawSrc || !rawTar || rawSrc.outerHTML !== rawTar.outerHTML) {
         start = i
         break
@@ -2871,8 +2938,13 @@ function partialUpdate (src, tar, des) {
     for (let i = 0; i < src.length; i++) {
       // copyAttribute(src[i], des[i], 'data-startline');
       // copyAttribute(src[i], des[i], 'data-endline');
+<<<<<<< HEAD
       const rawSrc = cloneAndRemoveDataAttr(src[i])
       const rawTar = cloneAndRemoveDataAttr(tar[i])
+=======
+      let rawSrc = cloneAndRemoveDataAttr(src[i])
+      let rawTar = cloneAndRemoveDataAttr(tar[i])
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       if (!rawSrc || !rawTar || rawSrc.outerHTML !== rawTar.outerHTML) {
         start = i
         break
@@ -2880,12 +2952,21 @@ function partialUpdate (src, tar, des) {
     }
     // tar end
     for (let i = 1; i <= tar.length + 1; i++) {
+<<<<<<< HEAD
       const srcLength = src.length
       const tarLength = tar.length
       // copyAttribute(src[srcLength - i], des[srcLength - i], 'data-startline');
       // copyAttribute(src[srcLength - i], des[srcLength - i], 'data-endline');
       const rawSrc = cloneAndRemoveDataAttr(src[srcLength - i])
       const rawTar = cloneAndRemoveDataAttr(tar[tarLength - i])
+=======
+      let srcLength = src.length
+      let tarLength = tar.length
+      // copyAttribute(src[srcLength - i], des[srcLength - i], 'data-startline');
+      // copyAttribute(src[srcLength - i], des[srcLength - i], 'data-endline');
+      let rawSrc = cloneAndRemoveDataAttr(src[srcLength - i])
+      let rawTar = cloneAndRemoveDataAttr(tar[tarLength - i])
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       if (!rawSrc || !rawTar || rawSrc.outerHTML !== rawTar.outerHTML) {
         tarEnd = tar.length - i
         break
@@ -2893,12 +2974,21 @@ function partialUpdate (src, tar, des) {
     }
     // src end
     for (let i = 1; i <= src.length + 1; i++) {
+<<<<<<< HEAD
       const srcLength = src.length
       const tarLength = tar.length
       // copyAttribute(src[srcLength - i], des[srcLength - i], 'data-startline');
       // copyAttribute(src[srcLength - i], des[srcLength - i], 'data-endline');
       const rawSrc = cloneAndRemoveDataAttr(src[srcLength - i])
       const rawTar = cloneAndRemoveDataAttr(tar[tarLength - i])
+=======
+      let srcLength = src.length
+      let tarLength = tar.length
+      // copyAttribute(src[srcLength - i], des[srcLength - i], 'data-startline');
+      // copyAttribute(src[srcLength - i], des[srcLength - i], 'data-endline');
+      let rawSrc = cloneAndRemoveDataAttr(src[srcLength - i])
+      let rawTar = cloneAndRemoveDataAttr(tar[tarLength - i])
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       if (!rawSrc || !rawTar || rawSrc.outerHTML !== rawTar.outerHTML) {
         srcEnd = src.length - i
         break
@@ -2911,12 +3001,16 @@ function partialUpdate (src, tar, des) {
       var rawTarEnd = cloneAndRemoveDataAttr(tar[tarEnd + 1 + start - i])
       if (rawTarStart && rawTarEnd && rawTarStart.outerHTML === rawTarEnd.outerHTML) { overlap++ } else { break }
     }
+<<<<<<< HEAD
     if (debug) { console.log('overlap:' + overlap) }
+=======
+    if (debug) { console.debug('overlap:' + overlap) }
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     // show diff content
     if (debug) {
-      console.log('start:' + start)
-      console.log('tarEnd:' + tarEnd)
-      console.log('srcEnd:' + srcEnd)
+      console.debug('start:' + start)
+      console.debug('tarEnd:' + tarEnd)
+      console.debug('srcEnd:' + srcEnd)
     }
     tarEnd += overlap
     srcEnd += overlap
@@ -2950,15 +3044,19 @@ function partialUpdate (src, tar, des) {
     }
     // add elements
     if (debug) {
-      console.log('ADD ELEMENTS')
-      console.log(newElements.join('\n'))
+      console.debug('ADD ELEMENTS')
+      console.debug(newElements.join('\n'))
     }
     if (des[start]) { $(newElements.join('')).insertBefore(des[start]) } else { $(newElements.join('')).insertAfter(des[start - 1]) }
     // remove elements
+<<<<<<< HEAD
     if (debug) { console.log('REMOVE ELEMENTS') }
+=======
+    if (debug) { console.debug('REMOVE ELEMENTS') }
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     for (let j = 0; j < removeElements.length; j++) {
       if (debug) {
-        console.log(removeElements[j].outerHTML)
+        console.debug(removeElements[j].outerHTML)
       }
       if (removeElements[j]) { $(removeElements[j]).remove() }
     }
@@ -3073,7 +3171,11 @@ function checkAbove (method) {
     text.push(editor.getLine(i))
   }
   text = text.join('\n') + '\n' + editor.getLine(cursor.line).slice(0, cursor.ch)
+<<<<<<< HEAD
   // console.log(text);
+=======
+  // console.debug(text);
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   return method(text)
 }
 
@@ -3085,7 +3187,11 @@ function checkBelow (method) {
     text.push(editor.getLine(i))
   }
   text = editor.getLine(cursor.line).slice(cursor.ch) + '\n' + text.join('\n')
+<<<<<<< HEAD
   // console.log(text);
+=======
+  // console.debug(text);
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   return method(text)
 }
 
@@ -3169,7 +3275,11 @@ $(editor.getInputField())
         callback(list)
       },
       template: function (value) {
+<<<<<<< HEAD
         return `<img class="emoji" src="${emojifyImageDir}/${value}.png"></img> ${value}`
+=======
+        return '<img class="emoji" src="' + serverurl + '/build/emojify.js/dist/images/basic/' + value + '.png"></img> ' + value
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       },
       replace: function (value) {
         return '$1:' + value + ': '
@@ -3204,6 +3314,7 @@ $(editor.getInputField())
           ending = '\n\n```'
         }
         if (this.langs.indexOf(lang) !== -1) { return '$1```' + lang + '=' + ending } else if (this.charts.indexOf(lang) !== -1) { return '$1```' + lang + ending }
+<<<<<<< HEAD
       },
       done: function () {
         var cursor = editor.getCursor()
@@ -3214,6 +3325,18 @@ $(editor.getInputField())
         // console.log(text);
         if (text === '\n```') { editor.doc.cm.execCommand('goLineUp') }
       },
+=======
+      },
+      done: function () {
+        var cursor = editor.getCursor()
+        var text = []
+        text.push(editor.getLine(cursor.line - 1))
+        text.push(editor.getLine(cursor.line))
+        text = text.join('\n')
+        // console.debug(text);
+        if (text === '\n```') { editor.doc.cm.execCommand('goLineUp') }
+      },
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       context: function (text) {
         return isInCode
       }
@@ -3243,7 +3366,11 @@ $(editor.getInputField())
         text.push(editor.getLine(cursor.line - 1))
         text.push(editor.getLine(cursor.line))
         text = text.join('\n')
+<<<<<<< HEAD
         // console.log(text);
+=======
+        // console.debug(text);
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
         if (text === '\n:::') { editor.doc.cm.execCommand('goLineUp') }
       },
       context: function (text) {
@@ -3275,10 +3402,17 @@ $(editor.getInputField())
           if (referral.search.indexOf(term) === 0) { list.push(referral.text) }
         })
         callback(list)
+<<<<<<< HEAD
       },
       replace: function (value) {
         return '$1' + value
       },
+=======
+      },
+      replace: function (value) {
+        return '$1' + value
+      },
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       context: function (text) {
         return !isInCode
       }
@@ -3298,10 +3432,17 @@ $(editor.getInputField())
           if (referral.search.indexOf(term) === 0) { list.push(referral.text) }
         })
         callback(list)
+<<<<<<< HEAD
       },
       replace: function (value) {
         return '$1' + value
       },
+=======
+      },
+      replace: function (value) {
+        return '$1' + value
+      },
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       context: function (text) {
         return !isInCode
       }
@@ -3349,10 +3490,37 @@ $(editor.getInputField())
     },
     'textComplete:show': function (e) {
       $(this).data('autocompleting', true)
+<<<<<<< HEAD
       editor.addKeyMap(textCompleteKeyMap)
     },
     'textComplete:hide': function (e) {
       $(this).data('autocompleting', false)
       editor.removeKeyMap(textCompleteKeyMap)
+=======
+      editor.setOption('extraKeys', {
+        'Up': function () {
+          return false
+        },
+        'Right': function () {
+          editor.doc.cm.execCommand('goCharRight')
+        },
+        'Down': function () {
+          return false
+        },
+        'Left': function () {
+          editor.doc.cm.execCommand('goCharLeft')
+        },
+        'Enter': function () {
+          return false
+        },
+        'Backspace': function () {
+          editor.doc.cm.execCommand('delCharBefore')
+        }
+      })
+    },
+    'textComplete:hide': function (e) {
+      $(this).data('autocompleting', false)
+      editor.setOption('extraKeys', editorInstance.defaultExtraKeys)
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     }
   })

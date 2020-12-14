@@ -129,13 +129,25 @@ module.exports = {
       filename: path.join(__dirname, 'public/views/build/slide-pack-scripts.ejs'),
       inject: false
     }),
-    new CopyWebpackPlugin([
-      {
-        context: path.join(__dirname, 'node_modules/mathjax'),
-        from: {
-          glob: '**/*',
-          dot: false
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          context: path.join(__dirname, 'node_modules/mathjax/unpacked'),
+          from: '**/*',
+          globOptions: {
+            dot: false
+          },
+          to: 'MathJax/'
         },
+        {
+          context: path.join(__dirname, 'node_modules/mathjax/fonts'),
+          from: '**/*',
+          globOptions: {
+            dot: false
+          },
+          to: 'fonts/'
+        },
+<<<<<<< HEAD
         to: 'MathJax/'
       },
       {
@@ -187,6 +199,38 @@ module.exports = {
         to: 'leaflet'
       }
     ]),
+=======
+        {
+          context: path.join(__dirname, 'node_modules/emojify.js'),
+          from: 'dist/**/*',
+          globOptions: {
+            dot: false
+          },
+          to: 'emojify.js/'
+        },
+        {
+          context: path.join(__dirname, 'node_modules/reveal.js'),
+          from: 'js',
+          to: 'reveal.js/js'
+        },
+        {
+          context: path.join(__dirname, 'node_modules/reveal.js'),
+          from: 'css',
+          to: 'reveal.js/css'
+        },
+        {
+          context: path.join(__dirname, 'node_modules/reveal.js'),
+          from: 'lib',
+          to: 'reveal.js/lib'
+        },
+        {
+          context: path.join(__dirname, 'node_modules/reveal.js'),
+          from: 'plugin',
+          to: 'reveal.js/plugin'
+        }
+      ]
+    }),
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     new MiniCssExtractPlugin()
   ],
 
@@ -220,6 +264,11 @@ module.exports = {
     index: [
       'babel-polyfill',
       'script-loader!jquery-ui-resizable',
+<<<<<<< HEAD
+=======
+      'script-loader!Idle.Js',
+      'expose-loader?LZString!lz-string',
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       'script-loader!codemirror',
       'script-loader!inlineAttachment',
       'script-loader!jqueryTextcomplete',
@@ -371,9 +420,12 @@ module.exports = {
       'script-loader!viz.js',
       'script-loader!viz.render.js',
       'script-loader!abcjs',
+<<<<<<< HEAD
       'script-loader!vega',
       'script-loader!vega-lite',
       'script-loader!vega-embed',
+=======
+>>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       'expose-loader?Reveal!reveal.js',
       'expose-loader?RevealMarkdown!reveal-markdown',
       'expose-loader?L!leaflet',
@@ -383,7 +435,7 @@ module.exports = {
 
   output: {
     path: path.join(__dirname, 'public/build'),
-    publicPath: '/build/',
+    publicPath: 'build/',
     filename: '[name].js'
   },
 
@@ -437,20 +489,13 @@ module.exports = {
     }, {
       test: /\.css$/,
       use: [
-        MiniCssExtractPlugin.loader,
-        'css-loader'
-      ]
-    }, {
-      test: /\.scss$/,
-      use: [
-        MiniCssExtractPlugin.loader,
         {
-          loader: 'css-loader',
+          loader: MiniCssExtractPlugin.loader,
           options: {
-            importLoaders: 1
+            publicPath: '',
           }
         },
-        'sass-loader'
+        'css-loader'
       ]
     }, {
       test: /\.less$/,
