@@ -1,7 +1,3 @@
 <% for (var css in htmlWebpackPlugin.files.css) { %>
-<<<<<<< HEAD
-<link href="<%= '\<\%= serverURL \%\>'%><%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
-=======
 <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 <% } %>

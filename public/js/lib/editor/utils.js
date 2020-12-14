@@ -88,15 +88,9 @@ export function insertLink (cm, isImage) {
 }
 
 export function insertHeader (cm) {
-<<<<<<< HEAD
-  const cursor = cm.getCursor()
-  const startOfLine = { line: cursor.line, ch: 0 }
-  const startOfLineText = cm.getRange(startOfLine, { line: cursor.line, ch: 1 })
-=======
   let cursor = cm.getCursor()
   let startOfLine = { line: cursor.line, ch: 0 }
   let startOfLineText = cm.getRange(startOfLine, { line: cursor.line, ch: 1 })
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
   // See if it is already a header
   if (startOfLineText === '#') {
     cm.replaceRange('#', startOfLine, startOfLine)

@@ -147,59 +147,6 @@ module.exports = {
           },
           to: 'fonts/'
         },
-<<<<<<< HEAD
-        to: 'MathJax/'
-      },
-      {
-        context: path.join(__dirname, 'node_modules/@hackmd/emojify.js'),
-        from: {
-          glob: 'dist/**/*',
-          dot: false
-        },
-        to: 'emojify.js/'
-      },
-      {
-        context: path.join(__dirname, 'node_modules/reveal.js'),
-        from: 'js',
-        to: 'reveal.js/js'
-      },
-      {
-        context: path.join(__dirname, 'node_modules/reveal.js'),
-        from: 'css',
-        to: 'reveal.js/css'
-      },
-      {
-        context: path.join(__dirname, 'node_modules/reveal.js'),
-        from: 'lib',
-        to: 'reveal.js/lib'
-      },
-      {
-        context: path.join(__dirname, 'node_modules/reveal.js'),
-        from: 'plugin',
-        to: 'reveal.js/plugin'
-      },
-      {
-        context: path.join(__dirname, 'node_modules/dictionary-de'),
-        from: '*',
-        to: 'dictionary-de/'
-      },
-      {
-        context: path.join(__dirname, 'node_modules/dictionary-de-at'),
-        from: '*',
-        to: 'dictionary-de-at/'
-      },
-      {
-        context: path.join(__dirname, 'node_modules/dictionary-de-ch'),
-        from: '*',
-        to: 'dictionary-de-ch/'
-      },
-      {
-        context: path.join(__dirname, 'node_modules/leaflet'),
-        from: 'dist',
-        to: 'leaflet'
-      }
-    ]),
-=======
         {
           context: path.join(__dirname, 'node_modules/emojify.js'),
           from: 'dist/**/*',
@@ -230,7 +177,6 @@ module.exports = {
         }
       ]
     }),
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     new MiniCssExtractPlugin()
   ],
 
@@ -264,11 +210,8 @@ module.exports = {
     index: [
       'babel-polyfill',
       'script-loader!jquery-ui-resizable',
-<<<<<<< HEAD
-=======
       'script-loader!Idle.Js',
       'expose-loader?LZString!lz-string',
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       'script-loader!codemirror',
       'script-loader!inlineAttachment',
       'script-loader!jqueryTextcomplete',
@@ -420,12 +363,6 @@ module.exports = {
       'script-loader!viz.js',
       'script-loader!viz.render.js',
       'script-loader!abcjs',
-<<<<<<< HEAD
-      'script-loader!vega',
-      'script-loader!vega-lite',
-      'script-loader!vega-embed',
-=======
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
       'expose-loader?Reveal!reveal.js',
       'expose-loader?RevealMarkdown!reveal-markdown',
       'expose-loader?L!leaflet',

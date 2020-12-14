@@ -2,11 +2,6 @@
 
 set -e
 
-<<<<<<< HEAD
-if [ ! -z "$DYNO" ]; then
-  # setup config files
-  cp .sequelizerc.example .sequelizerc
-=======
 cat << EOF > .sequelizerc
 var path = require('path');
 
@@ -18,7 +13,6 @@ module.exports = {
 }
 
 EOF
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
 cat << EOF > config.json
 
@@ -28,8 +22,3 @@ cat << EOF > config.json
 }
 
 EOF
-<<<<<<< HEAD
-
-fi
-=======
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870

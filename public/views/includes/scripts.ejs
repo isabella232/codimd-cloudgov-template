@@ -1,8 +1,4 @@
 <script src="config"></script>
 <% for (var js in htmlWebpackPlugin.files.js) { %>
-<<<<<<< HEAD
-<script src="<%= '\<\%= serverURL \%\>'%><%= htmlWebpackPlugin.files.js[js] %>" defer></script>
-=======
 <script src="<%= htmlWebpackPlugin.files.js[js] %>" defer></script>
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 <% } %>

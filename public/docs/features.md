@@ -6,13 +6,8 @@
 This means that you can write notes with other people on your **desktop**, **tablet** or even on the **phone**.
 You can sign-in via multiple auth providers like **Facebook**, **Twitter**, **GitHub** and many more on the [*homepage*](/).
 
-<<<<<<< HEAD
-If you experience any _issues_, feel free to report it on [**GitHub**](https://github.com/hackmdio/codimd/issues).
-Or meet us on [**Gitter**](https://gitter.im/hackmdio/hackmd) for dev-talk and interactive help.
-=======
 If you experience any *issues*, feel free to report it on [**GitHub**](https://github.com/hedgedoc/hedgedoc/issues).
 Or meet us on [**Matrix**](https://chat.hedgedoc.org) for dev-talk and interactive help.
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 **Thank you very much!**
 
 ## Workspace
@@ -352,51 +347,9 @@ GABc dedB|dedB dedB|c2ec B2dB|A2F2 G4:|
 g2gf g2Bd|g2f2 e2d2|c2ec B2dB|A2F2 G4:|
 ```
 
-<<<<<<< HEAD
-### PlantUML
-```plantuml
-start
-if (condition A) then (yes)
-  :Text 1;
-elseif (condition B) then (yes)
-  :Text 2;
-  stop
-elseif (condition C) then (yes)
-  :Text 3;
-elseif (condition D) then (yes)
-  :Text 4;
-else (nothing)
-  :Text else;
-endif
-stop
-```
-
-### Vega-Lite
-```vega
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "data": {"url": "https://vega.github.io/editor/data/barley.json"},
-  "mark": "bar",
-  "encoding": {
-    "x": {"aggregate": "sum", "field": "yield", "type": "quantitative"},
-    "y": {"field": "variety", "type": "nominal"},
-    "color": {"field": "site", "type": "nominal"}
-  }
-}
-```
-
-> More information about **sequence diagrams** syntax [here](http://bramp.github.io/js-sequence-diagrams/).
-> More information about **flow charts** syntax [here](http://adrai.github.io/flowchart.js/).
-> More information about **graphviz** syntax [here](http://www.tonyballantyne.com/graphs.html)
-> More information about **mermaid** syntax [here](http://mermaid-js.github.io/mermaid)
-> More information about **abc** syntax [here](http://abcnotation.com/learn)
-> More information about **plantuml** syntax [here](http://plantuml.com/index)
-> More information about **vega** syntax [here](https://vega.github.io/vega-lite/docs)
-=======
 More information about **abc** syntax [here](https://abcnotation.com/learn)
 
 ### Alert Area
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
 :::success
 Yes :tada:
@@ -414,15 +367,7 @@ Watch out :zap:
 Oh No! :fire:
 :::
 
-<<<<<<< HEAD
-:::spoiler Click to show details
-You found me :stuck_out_tongue_winking_eye:
-:::
-
-## Typography
-=======
 ### Typography
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
 #### Headers
 
@@ -481,14 +426,7 @@ Subscript: H~2~O
 
 ==Marked text==
 
-<<<<<<< HEAD
-{ruby base|rubytext}
-
-### Blockquotes
-
-=======
 #### Blockquotes
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
 > Blockquotes can also be nested...
 >> ...by using additional greater-than signs right next to each other...

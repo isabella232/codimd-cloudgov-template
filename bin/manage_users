@@ -34,39 +34,6 @@ function getPass (argv, action) {
 }
 
 // Using an async function to be able to use await inside
-<<<<<<< HEAD
-async function createUser (argv) {
-  const existingUser = await models.User.findOne({ where: { email: argv['add'] } })
-  // Cannot create already-existing users
-  if (existingUser) {
-    console.log(`User with e-mail ${existingUser.email} already exists! Aborting ...`)
-    process.exit(2)
-  }
-
-  const pass = getPass(argv, 'add')
-
-  // Lets try to create, and check success
-  const ref = await models.User.create({ email: argv['add'], password: pass })
-  if (ref === undefined) {
-    console.log(`Could not create user with email ${argv['add']}`)
-    process.exit(1)
-  } else { console.log(`Created user with email ${argv['add']}`) }
-}
-
-// Using an async function to be able to use await inside
-async function deleteUser (argv) {
-  // Cannot delete non-existing users
-  const existingUser = await models.User.findOne({ where: { email: argv['del'] } })
-  if (!existingUser) {
-    console.log(`User with e-mail ${argv['del']} does not exist, cannot delete`)
-    process.exit(1)
-  }
-
-  // Sadly .destroy() does not return any success value with all
-  // backends. See sequelize #4124
-  await existingUser.destroy()
-  console.log(`Deleted user ${argv['del']} ...`)
-=======
 async function createUser(argv) {
 	const existing_user = await models.User.findOne({where: {email: argv["add"]}});
 	// Cannot create already-existing users
@@ -100,26 +67,9 @@ async function deleteUser(argv) {
 	// backends. See sequelize #4124
 	await existing_user.destroy();
 	console.log(`Deleted user ${argv["del"]} ...`);
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 }
 
 // Using an async function to be able to use await inside
-<<<<<<< HEAD
-async function resetUser (argv) {
-  const existingUser = await models.User.findOne({ where: { email: argv['reset'] } })
-  // Cannot reset non-existing users
-  if (!existingUser) {
-    console.log(`User with e-mail ${argv['reset']} does not exist, cannot reset`)
-    process.exit(1)
-  }
-
-  const pass = getPass(argv, 'reset')
-
-  // set password and save
-  existingUser.password = pass
-  await existingUser.save()
-  console.log(`User with email ${argv['reset']} password has been reset`)
-=======
 async function resetUser(argv) {
 	const existing_user = await models.User.findOne({where: {email: argv["reset"]}});
 	// Cannot reset non-existing users
@@ -134,7 +84,6 @@ async function resetUser(argv) {
 	existing_user.password = pass;
 	await existing_user.save();
 	console.log(`User with email ${argv["reset"]} password has been reset`);
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 }
 
 const options = {

@@ -254,78 +254,11 @@ export default class Editor {
       utils.insertText(this.editor, '> []')
     })
 
-<<<<<<< HEAD
-    // table tools UI
-    const opts = options({
-      smartCursor: true,
-      formatType: FormatType.NORMAL
-    })
-
-    insertRow.click(() => {
-      this.tableEditor.insertRow(opts)
-      this.editor.focus()
-    })
-
-    deleteRow.click(() => {
-      this.tableEditor.deleteRow(opts)
-      this.editor.focus()
-    })
-
-    moveRowUp.click(() => {
-      this.tableEditor.moveRow(-1, opts)
-      this.editor.focus()
-    })
-
-    moveRowDown.click(() => {
-      this.tableEditor.moveRow(1, opts)
-      this.editor.focus()
-    })
-
-    insertColumn.click(() => {
-      this.tableEditor.insertColumn(opts)
-      this.editor.focus()
-    })
-
-    deleteColumn.click(() => {
-      this.tableEditor.deleteColumn(opts)
-      this.editor.focus()
-    })
-
-    moveColumnLeft.click(() => {
-      this.tableEditor.moveColumn(-1, opts)
-      this.editor.focus()
-    })
-
-    moveColumnRight.click(() => {
-      this.tableEditor.moveColumn(1, opts)
-      this.editor.focus()
-    })
-
-    alignLeft.click(() => {
-      this.tableEditor.alignColumn(Alignment.LEFT, opts)
-      this.editor.focus()
-    })
-
-    alignCenter.click(() => {
-      this.tableEditor.alignColumn(Alignment.CENTER, opts)
-      this.editor.focus()
-    })
-
-    alignRight.click(() => {
-      this.tableEditor.alignColumn(Alignment.RIGHT, opts)
-      this.editor.focus()
-    })
-
-    alignNone.click(() => {
-      this.tableEditor.alignColumn(Alignment.NONE, opts)
-      this.editor.focus()
-=======
     uploadImage.bind('change', function (e) {
       var files = e.target.files || e.dataTransfer.files
       e.dataTransfer = {}
       e.dataTransfer.files = files
       inlineAttach.onDrop(e)
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
     })
   }
 
@@ -665,13 +598,10 @@ export default class Editor {
 
         self.editor.setOption('mode', 'spell-checker')
       }
-<<<<<<< HEAD
-=======
       Cookies.set('spellcheck', mode === 'spell-checker', {
         expires: 365,
         sameSite: window.cookiePolicy
       })
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
 
       self.setSpellcheckLang(lang)
     })

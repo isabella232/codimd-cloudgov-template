@@ -114,13 +114,6 @@
     "Export user data": "匯出使用者資料",
     "Help us translating on %s": "來 %s 幫我們翻譯",
     "Source Code": "原始碼",
-<<<<<<< HEAD
-    "Powered by %s": "技術支援：%s",
-    "Register": "註冊",
-    "Export with pandoc": "使用 pandoc 匯出",
-    "Select output format": "選擇輸出格式"
-}
-=======
     "Register": "註冊",
     "Powered by %s": "由 %s 強力驅動",
     "Help us translating": "幫助我們改進翻譯",
@@ -135,4 +128,3 @@
     "changed": "changed",
     "created": "created"
 }
->>>>>>> 276ae10c7fbef7b9f6cfa872d261660d7bd10870
