@@ -1,17 +1,18 @@
 ---
 applications:
-- name: paas-codimd
+- name: codimd
   instances: 1
   memory: 1G
   command: yarn run start
   buildpacks: 
     - nodejs_buildpack
   services:
-    - paas-codimd-db  
+    - codimd-psql
   env:
-    CF_DB: paas-codimd-db
+    CF_DB: codimd-psql
+    CMD_DB_URL: $DATABASE_URL
     CMD_PORT: 8080
-    CMD_DOMAIN: paas-codimd.app.cloud.gov
+    CMD_DOMAIN: codimd.app.cloud.gov
     NODE_ENV: production
     CMD_PROTOCOL_USESSL: true
     PGSSLMODE: require
