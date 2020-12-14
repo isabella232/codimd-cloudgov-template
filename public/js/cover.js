@@ -25,12 +25,7 @@ import {
 
 import { saveAs } from 'file-saver'
 import List from 'list.js'
-import unescapeHTML from 'lodash/unescape'
-
-require('./locale')
-
-require('../css/cover.css')
-require('../css/site.css')
+import S from 'string'
 
 require('./locale')
 
@@ -402,7 +397,7 @@ function buildTagsFilter (tags) {
   for (let i = 0; i < tags.length; i++) {
     tags[i] = {
       id: i,
-      text: unescapeHTML(tags[i])
+      text: S(tags[i]).unescapeHTML().s
     }
   }
   filtertags = tags

@@ -1,15 +1,7 @@
-/* global CodeMirror, $, editor, Cookies */
-import { options, Alignment, FormatType } from '@susisu/mte-kernel'
-import debounce from 'lodash/debounce'
-
 import * as utils from './utils'
 import config from './config'
 import statusBarTemplate from './statusbar.html'
 import toolBarTemplate from './toolbar.html'
-import './markdown-lint'
-import CodeMirrorSpellChecker, { supportLanguages, supportLanguageCodes } from './spellcheck'
-import { initTableEditor } from './table-editor'
-import { availableThemes } from './constants'
 
 import '../../../css/ui/toolbar.css'
 
@@ -85,8 +77,8 @@ export default class Editor {
       },
       'Cmd-Left': 'goLineLeftSmart',
       'Cmd-Right': 'goLineRight',
-      Home: 'goLineLeftSmart',
-      End: 'goLineRight',
+      'Home': 'goLineLeftSmart',
+      'End': 'goLineRight',
       'Ctrl-C': function (cm) {
         if (!isMac && cm.getOption('keyMap').substr(0, 3) === 'vim') {
           document.execCommand('copy')
@@ -133,17 +125,6 @@ export default class Editor {
     }
     this.eventListeners = {}
     this.config = config
-
-    // define modes from mode mime
-    const ignoreOverlay = {
-      token: function (stream, state) {
-        stream.next()
-        return null
-      }
-    }
-    CodeMirror.defineMode('vega', function (config, modeConfig) {
-      return CodeMirror.overlayMode(CodeMirror.getMode(config, 'application/ld+json'), ignoreOverlay)
-    })
   }
 
   on (event, cb) {
@@ -180,19 +161,6 @@ export default class Editor {
     var makeLine = $('#makeLine')
     var makeComment = $('#makeComment')
     var uploadImage = $('#uploadImage')
-
-    var insertRow = $('#insertRow')
-    var deleteRow = $('#deleteRow')
-    var moveRowUp = $('#moveRowUp')
-    var moveRowDown = $('#moveRowDown')
-    var insertColumn = $('#insertColumn')
-    var deleteColumn = $('#deleteColumn')
-    var moveColumnLeft = $('#moveColumnLeft')
-    var moveColumnRight = $('#moveColumnRight')
-    var alignLeft = $('#alignLeft')
-    var alignCenter = $('#alignCenter')
-    var alignRight = $('#alignRight')
-    var alignNone = $('#alignNone')
 
     makeBold.click(() => {
       utils.wrapTextWith(this.editor, this.editor, '**')
@@ -273,7 +241,6 @@ export default class Editor {
     this.statusLength = this.statusBar.find('.status-length')
     this.statusTheme = this.statusBar.find('.status-theme')
     this.statusSpellcheck = this.statusBar.find('.status-spellcheck')
-    this.statusLinter = this.statusBar.find('.status-linter')
     this.statusPreferences = this.statusBar.find('.status-preferences')
     this.statusPanel = this.editor.addPanel(this.statusBar[0], {
       position: 'bottom'
@@ -283,17 +250,14 @@ export default class Editor {
     this.setKeymap()
     this.setTheme()
     this.setSpellcheck()
-    this.setLinter()
     this.setPreferences()
-
-    this.handleStatusBarResize()
   }
 
   updateStatusBar () {
     if (!this.statusBar) return
 
     var cursor = this.editor.getCursor()
-    var cursorText = 'Line ' + (cursor.line + 1) + ', Column ' + (cursor.ch + 1)
+    var cursorText = 'Line ' + (cursor.line + 1) + ', Columns ' + (cursor.ch + 1)
     this.statusCursor.text(cursorText)
     var fileText = ' — ' + editor.lineCount() + ' Lines'
     this.statusFile.text(fileText)
@@ -309,21 +273,6 @@ export default class Editor {
       this.statusLength.css('color', 'white')
       this.statusLength.attr('title', 'You can write up to ' + config.docmaxlength + ' characters in this document.')
     }
-  }
-
-  handleStatusBarResize () {
-    const onResize = debounce(() => {
-      if (!this.statusBar) {
-        return
-      }
-
-      const maxHeight = window.innerHeight - this.statusBar.height() - 50 /* navbar height */ - 10 /* spacing */
-      this.statusBar.find('.status-theme ul.dropdown-menu').css('max-height', `${maxHeight}px`)
-    }, 300)
-
-    $(window).resize(onResize)
-
-    onResize()
   }
 
   setIndent () {
@@ -470,103 +419,56 @@ export default class Editor {
   }
 
   setTheme () {
-    this.statusIndicators.find('.status-theme ul.dropdown-menu').append(availableThemes.map(theme => {
-      return $(`<li value="${theme.value}"><a>${theme.name}</a></li>`)
-    }))
-
-    const activateThemeListItem = (theme) => {
-      this.statusIndicators.find('.status-theme li').removeClass('active')
-      this.statusIndicators.find(`.status-theme li[value="${theme}"]`).addClass('active')
+    var cookieTheme = Cookies.get('theme')
+    if (cookieTheme) {
+      this.editor.setOption('theme', cookieTheme)
     }
 
-    const setTheme = theme => {
+    var themeToggle = this.statusTheme.find('.ui-theme-toggle')
+
+    const checkTheme = () => {
+      var theme = this.editor.getOption('theme')
+      if (theme === 'one-dark') {
+        themeToggle.removeClass('active')
+      } else {
+        themeToggle.addClass('active')
+      }
+    }
+
+    themeToggle.click(() => {
+      var theme = this.editor.getOption('theme')
+      if (theme === 'one-dark') {
+        theme = 'default'
+      } else {
+        theme = 'one-dark'
+      }
       this.editor.setOption('theme', theme)
       Cookies.set('theme', theme, {
         expires: 365,
         sameSite: window.cookiePolicy
       })
-      this.statusIndicators.find('.status-theme li').removeClass('active')
-      this.statusIndicators.find(`.status-theme li[value="${theme}"]`).addClass('active')
-    }
 
-    const cookieTheme = Cookies.get('theme')
-    if (cookieTheme && availableThemes.find(theme => cookieTheme === theme.value)) {
-      setTheme(cookieTheme)
-      activateThemeListItem(cookieTheme)
-    } else {
-      activateThemeListItem(this.editor.getOption('theme'))
-    }
-
-    this.statusIndicators.find('.status-theme li').click(function () {
-      const theme = $(this).attr('value')
-      setTheme(theme)
-      activateThemeListItem(theme)
+      checkTheme()
     })
-  }
 
-  setSpellcheckLang (lang) {
-    if (lang === 'disabled') {
-      this.statusIndicators.find('.spellcheck-lang').text('')
-      this.activateSpellcheckListItem(false)
-      return
-    }
-
-    if (!supportLanguageCodes.includes(lang)) {
-      return
-    }
-
-    const langName = this.statusIndicators.find(`.status-spellcheck li[value="${lang}"]`).text()
-    this.statusIndicators.find('.spellcheck-lang').text(langName)
-
-    this.spellchecker.setDictLang(lang)
-    this.activateSpellcheckListItem(lang)
-  }
-
-  getExistingSpellcheckLang () {
-    const cookieSpellcheck = Cookies.get('spellcheck')
-
-    if (cookieSpellcheck) {
-      return cookieSpellcheck === 'false' ? undefined : cookieSpellcheck
-    } else {
-      return undefined
-    }
-  }
-
-  activateSpellcheckListItem (lang) {
-    this.statusIndicators.find('.status-spellcheck li').removeClass('active')
-
-    if (lang) {
-      this.statusIndicators.find(`.status-spellcheck li[value="${lang}"]`).addClass('active')
-    } else {
-      this.statusIndicators.find(`.status-spellcheck li[value="disabled"]`).addClass('active')
-    }
+    checkTheme()
   }
 
   setSpellcheck () {
-    this.statusSpellcheck.find('ul.dropdown-menu').append(supportLanguages.map(lang => {
-      return $(`<li value="${lang.value}"><a>${lang.name}</a></li>`)
-    }))
-
-    const cookieSpellcheck = Cookies.get('spellcheck')
+    var cookieSpellcheck = Cookies.get('spellcheck')
     if (cookieSpellcheck) {
-      let mode = null
-      let lang = 'en_US'
-
-      if (cookieSpellcheck === 'false' || !cookieSpellcheck) {
-        mode = defaultEditorMode
-        this.activateSpellcheckListItem(false)
-      } else {
+      var mode = null
+      if (cookieSpellcheck === 'true' || cookieSpellcheck === true) {
         mode = 'spell-checker'
-        if (supportLanguageCodes.includes(cookieSpellcheck)) {
-          lang = cookieSpellcheck
-        }
-        this.setSpellcheckLang(lang)
+      } else {
+        mode = defaultEditorMode
       }
-
-      this.editor.setOption('mode', mode)
+      if (mode && mode !== this.editor.getOption('mode')) {
+        this.editor.setOption('mode', mode)
+      }
     }
 
-    const spellcheckToggle = this.statusSpellcheck.find('.ui-spellcheck-toggle')
+    var spellcheckToggle = this.statusSpellcheck.find('.ui-spellcheck-toggle')
 
     const checkSpellcheck = () => {
       var mode = this.editor.getOption('mode')
@@ -577,72 +479,40 @@ export default class Editor {
       }
     }
 
-    const self = this
-    this.statusIndicators.find(`.status-spellcheck li`).click(function () {
-      const lang = $(this).attr('value')
-
-      if (lang === 'disabled') {
-        spellcheckToggle.removeClass('active')
-
-        Cookies.set('spellcheck', false, {
-          expires: 365
-        })
-
-        self.editor.setOption('mode', defaultEditorMode)
+    spellcheckToggle.click(() => {
+      var mode = this.editor.getOption('mode')
+      if (mode === defaultEditorMode) {
+        mode = 'spell-checker'
       } else {
-        spellcheckToggle.addClass('active')
-
-        Cookies.set('spellcheck', lang, {
-          expires: 365
-        })
-
-        self.editor.setOption('mode', 'spell-checker')
+        mode = defaultEditorMode
+      }
+      if (mode && mode !== this.editor.getOption('mode')) {
+        this.editor.setOption('mode', mode)
       }
       Cookies.set('spellcheck', mode === 'spell-checker', {
         expires: 365,
         sameSite: window.cookiePolicy
       })
 
-      self.setSpellcheckLang(lang)
+      checkSpellcheck()
     })
 
     checkSpellcheck()
-  }
 
-  toggleLinter (enable) {
-    const gutters = this.editor.getOption('gutters')
-    const lintGutter = 'CodeMirror-lint-markers'
-
-    if (enable) {
-      if (!gutters.includes(lintGutter)) {
-        this.editor.setOption('gutters', [lintGutter, ...gutters])
-      }
-      Cookies.set('linter', true, {
-        expires: 365
-      })
-    } else {
-      this.editor.setOption('gutters', gutters.filter(g => g !== lintGutter))
-      Cookies.remove('linter')
+    // workaround spellcheck might not activate beacuse the ajax loading
+    if (window.num_loaded < 2) {
+      var spellcheckTimer = setInterval(
+        () => {
+          if (window.num_loaded >= 2) {
+            if (this.editor.getOption('mode') === 'spell-checker') {
+              this.editor.setOption('mode', 'spell-checker')
+            }
+            clearInterval(spellcheckTimer)
+          }
+        },
+        100
+      )
     }
-    this.editor.setOption('lint', enable)
-  }
-
-  setLinter () {
-    const linterToggle = this.statusLinter.find('.ui-linter-toggle')
-
-    const updateLinterStatus = (enable) => {
-      linterToggle.toggleClass('active', enable)
-    }
-
-    linterToggle.click(() => {
-      const lintEnable = this.editor.getOption('lint')
-      this.toggleLinter.bind(this)(!lintEnable)
-      updateLinterStatus(!lintEnable)
-    })
-
-    const enable = !!Cookies.get('linter')
-    this.toggleLinter.bind(this)(enable)
-    updateLinterStatus(enable)
   }
 
   resetEditorKeymapToBrowserKeymap () {
@@ -660,7 +530,6 @@ export default class Editor {
       this.jumpToAddressBarKeymapValue = null
     }
   }
-
   setOverrideBrowserKeymap () {
     var overrideBrowserKeymap = $(
       '.ui-preferences-override-browser-keymap label > input[type="checkbox"]'
@@ -731,9 +600,6 @@ export default class Editor {
       otherCursors: true,
       placeholder: "← Start by entering a title here\n===\nVisit /features if you don't know what to do.\nHappy hacking :)"
     })
-
-    this.spellchecker = new CodeMirrorSpellChecker(CodeMirror, this.getExistingSpellcheckLang(), this.editor)
-    this.tableEditor = initTableEditor(this.editor)
 
     return this.editor
   }

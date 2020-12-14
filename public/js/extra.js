@@ -190,7 +190,7 @@ export function isValidURL (str) {
 export function parseMeta (md, edit, view, toc, tocAffix) {
   let lang = null
   let dir = null
-  let breaks = window.defaultUseHardbreak
+  let breaks = true
   if (md && md.meta) {
     const meta = md.meta
     lang = meta.lang
@@ -223,7 +223,7 @@ export function parseMeta (md, edit, view, toc, tocAffix) {
   if (typeof breaks === 'boolean' && !breaks) {
     md.options.breaks = false
   } else {
-    md.options.breaks = window.defaultUseHardbreak
+    md.options.breaks = true
   }
 }
 
@@ -345,7 +345,7 @@ export function finishView (view) {
       $value.html('')
       chart.drawSVG(value, {
         'line-width': 2,
-        fill: 'none',
+        'fill': 'none',
         'font-size': '16px',
         'font-family': "'Andale Mono', monospace"
       })
@@ -364,20 +364,13 @@ export function finishView (view) {
     try {
       var $value = $(value)
       var $ele = $(value).parent().parent()
-      $value.unwrap()
-      viz.renderString($value.text())
-        .then(graphviz => {
-          if (!graphviz) throw Error('viz.js output empty graph')
-          $value.html(graphviz)
 
-          $ele.addClass('graphviz')
-          $value.children().unwrap()
-        })
-        .catch(err => {
-          viz = new window.Viz()
-          $value.parent().append(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
-          console.warn(err)
-        })
+      var graphviz = Viz($value.text())
+      if (!graphviz) throw Error('viz.js output empty graph')
+      $value.html(graphviz)
+
+      $ele.addClass('graphviz')
+      $value.children().unwrap().unwrap()
     } catch (err) {
       $value.unwrap()
       $value.parent().append(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
@@ -391,11 +384,16 @@ export function finishView (view) {
       var $value = $(value)
       const $ele = $(value).closest('pre')
 
-      window.mermaid.parse($value.text())
+      window.mermaid.mermaidAPI.parse($value.text())
       $ele.addClass('mermaid')
       $ele.html($value.text())
       window.mermaid.init(undefined, $ele)
     } catch (err) {
+      var errormessage = err
+      if (err.str) {
+        errormessage = err.str
+      }
+
       $value.unwrap()
       $value.parent().append(`<div class="alert alert-warning">${escapeHTML(errormessage)}</div>`)
       console.warn(errormessage)
@@ -615,7 +613,7 @@ function generateCleanHTML (view) {
     let name = $(value).attr('alt')
     name = name.substr(1)
     name = name.slice(0, name.length - 1)
-    $(value).attr('src', `https://cdn.jsdelivr.net/npm/@hackmd/emojify.js@2.1.0/dist/images/basic/${name}.png`)
+    $(value).attr('src', `https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/images/basic/${name}.png`)
   })
   // replace video to iframe
   src.find('div[data-videoid]').each((key, value) => {
@@ -742,12 +740,12 @@ export function generateToc (id) {
   target.html('')
   /* eslint-disable no-unused-vars */
   var toc = new window.Toc('doc', {
-    level: 3,
-    top: -1,
-    class: 'toc',
-    ulClass: 'nav',
-    targetId: id,
-    process: getHeaderContent
+    'level': 3,
+    'top': -1,
+    'class': 'toc',
+    'ulClass': 'nav',
+    'targetId': id,
+    'process': getHeaderContent
   })
   /* eslint-enable no-unused-vars */
   if (target.text() === 'undefined') { target.html('') }
@@ -860,7 +858,7 @@ const linkifyAnchors = (level, containingElement) => {
   const headers = containingElement.getElementsByTagName(`h${level}`)
 
   for (let i = 0, l = headers.length; i < l; i++) {
-    const header = headers[i]
+    let header = headers[i]
     if (header.getElementsByClassName('anchor').length === 0) {
       if (typeof header.id === 'undefined' || header.id === '') {
         header.id = createHeaderId(getHeaderContent(header))
@@ -940,12 +938,12 @@ export function renderTOC (view) {
     const target = $(`#${id}`)
     target.html('')
     /* eslint-disable no-unused-vars */
-    const TOC = new window.Toc('doc', {
-      level: 3,
-      top: -1,
-      class: 'toc',
-      targetId: id,
-      process: getHeaderContent
+    let TOC = new window.Toc('doc', {
+      'level': 3,
+      'top': -1,
+      'class': 'toc',
+      'targetId': id,
+      'process': getHeaderContent
     })
     /* eslint-enable no-unused-vars */
     if (target.text() === 'undefined') { target.html('') }
@@ -961,7 +959,7 @@ export function scrollToHash () {
 
 function highlightRender (code, lang) {
   if (!lang || /no(-?)highlight|plain|text/.test(lang)) { return }
-  code = escapeHTML(code)
+  code = S(code).escapeHTML().s
   if (lang === 'sequence') {
     return `<div class="sequence-diagram raw">${code}</div>`
   } else if (lang === 'flow') {
@@ -972,10 +970,6 @@ function highlightRender (code, lang) {
     return `<div class="mermaid raw">${code}</div>`
   } else if (lang === 'abc') {
     return `<div class="abc raw">${code}</div>`
-  } else if (lang === 'vega') {
-    return `<div class="vega raw">${code}</div>`
-  } else if (lang === 'geo') {
-    return `<div class="geo raw">${code}</div>`
   }
   const result = {
     value: code
@@ -999,7 +993,7 @@ function highlightRender (code, lang) {
 
 export let md = markdownit('default', {
   html: true,
-  breaks: window.defaultUseHardbreak,
+  breaks: true,
   langPrefix: '',
   linkify: true,
   typographer: true,
@@ -1023,16 +1017,21 @@ md.use(require('markdown-it-mathjax')({
   afterDisplayMath: '\\]</span>'
 }))
 md.use(require('markdown-it-imsize'))
-md.use(require('markdown-it-ruby'))
+
+md.use(require('markdown-it-emoji'), {
+  shortcuts: {}
+})
 
 window.emojify.setConfig({
   blacklist: {
     elements: ['script', 'textarea', 'a', 'pre', 'code', 'svg'],
     classes: ['no-emojify']
   },
-  img_dir: emojifyImageDir,
+  img_dir: `${serverurl}/build/emojify.js/dist/images/basic`,
   ignore_emoticons: true
 })
+
+md.renderer.rules.emoji = (token, idx) => window.emojify.replace(`:${token[idx].markup}:`)
 
 function renderContainer (tokens, idx, options, env, self) {
   tokens[idx].attrJoin('role', 'alert')
@@ -1044,29 +1043,8 @@ md.use(markdownitContainer, 'success', { render: renderContainer })
 md.use(markdownitContainer, 'info', { render: renderContainer })
 md.use(markdownitContainer, 'warning', { render: renderContainer })
 md.use(markdownitContainer, 'danger', { render: renderContainer })
-md.use(markdownitContainer, 'spoiler', {
-  validate: function (params) {
-    return params.trim().match(/^spoiler(\s+.*)?$/)
-  },
-  render: function (tokens, idx) {
-    const m = tokens[idx].info.trim().match(/^spoiler(\s+.*)?$/)
 
-    if (tokens[idx].nesting === 1) {
-      // opening tag
-      const summary = m[1] && m[1].trim()
-      if (summary) {
-        return `<details><summary>${md.renderInline(summary)}</summary>\n`
-      } else {
-        return `<details>\n`
-      }
-    } else {
-      // closing tag
-      return '</details>\n'
-    }
-  }
-})
-
-const defaultImageRender = md.renderer.rules.image
+let defaultImageRender = md.renderer.rules.image
 md.renderer.rules.image = function (tokens, idx, options, env, self) {
   tokens[idx].attrJoin('class', 'raw')
   return defaultImageRender(...arguments)

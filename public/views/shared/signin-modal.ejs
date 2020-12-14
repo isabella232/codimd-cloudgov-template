@@ -23,19 +23,14 @@
                     <i class="fa fa-github"></i> <%= __('Sign in via %s', 'GitHub') %>
                 </a>
                 <% } %>
-                <% if (authProviders.bitbucket) { %>
-                <a href="<%- serverURL %>/auth/bitbucket" class="btn btn-lg btn-block btn-social btn-bitbucket">
-                    <i class="fa fa-bitbucket"></i> <%= __('Sign in via %s', 'Bitbucket') %>
-                </a>
-                <% } %>
                 <% if (authProviders.gitlab) { %>
-                <a href="<%- serverURL %>/auth/gitlab" class="btn btn-lg btn-block btn-social btn-gitlab">
+                <a href="<%- serverURL %>/auth/gitlab" class="btn btn-lg btn-block btn-social btn-soundcloud">
                     <i class="fa fa-gitlab"></i> <%= __('Sign in via %s', 'GitLab') %>
                 </a>
                 <% } %>
                 <% if (authProviders.mattermost) { %>
-                <a href="<%- serverURL %>/auth/mattermost" class="btn btn-lg btn-block btn-social btn-mattermost">
-                    <i class="oauth-icon"><img alt="mattermost-logo" src="<%- serverURL %>/images/mattermost-logo.svg" /></i> <%= __('Sign in via %s', 'Mattermost') %>
+                <a href="<%- serverURL %>/auth/mattermost" class="btn btn-lg btn-block btn-social btn-soundcloud">
+                    <i class="fa fa-mattermost"></i> <%= __('Sign in via %s', 'Mattermost') %>
                 </a>
                 <% } %>
                 <% if (authProviders.dropbox) { %>
@@ -58,7 +53,7 @@
                     <i class="fa fa-mail-forward"></i> <%= __('Sign in via %s', authProviders.oauth2ProviderName || 'OAuth2') %>
                 </a>
                 <% } %>
-                <% if ((authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.bitbucket || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.saml || authProviders.oauth2) && authProviders.ldap) { %>
+                <% if ((authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.saml || authProviders.oauth2) && authProviders.ldap) { %>
                 <hr>
                 <% }%>
                 <% if (authProviders.ldap) { %>
@@ -83,7 +78,7 @@
                     </div>
                 </form>
                 <% } %>
-                <% if ((authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.bitbucket || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.oauth2) && authProviders.openID) { %>
+                <% if ((authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.oauth2) && authProviders.openID) { %>
                 <hr>
                 <% }%>
                 <% if (authProviders.openID) { %>
@@ -102,7 +97,7 @@
                     </div>
                 </form>
                 <% } %>
-                <% if ((authProviders.facebook || authProviders.twitter || authProviders.github|| authProviders.bitbucket || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.oauth2 || authProviders.openID) && authProviders.email) { %>
+                <% if ((authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.oauth2 || authProviders.openID) && authProviders.email) { %>
                 <hr>
                 <% }%>
                 <% if (authProviders.email) { %>

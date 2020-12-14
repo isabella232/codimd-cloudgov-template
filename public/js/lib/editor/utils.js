@@ -1,20 +1,19 @@
-/* global CodeMirror, editor */
 const wrapSymbols = ['*', '_', '~', '^', '+', '=']
 export function wrapTextWith (editor, cm, symbol) {
   if (!cm.getSelection()) {
     return CodeMirror.Pass
   } else {
-    const ranges = cm.listSelections()
+    let ranges = cm.listSelections()
     for (let i = 0; i < ranges.length; i++) {
-      const range = ranges[i]
+      let range = ranges[i]
       if (!range.empty()) {
         const from = range.from()
         const to = range.to()
 
         if (symbol !== 'Backspace') {
-          const selection = cm.getRange(from, to)
-          const anchorIndex = editor.indexFromPos(ranges[i].anchor)
-          const headIndex = editor.indexFromPos(ranges[i].head)
+          let selection = cm.getRange(from, to)
+          let anchorIndex = editor.indexFromPos(ranges[i].anchor)
+          let headIndex = editor.indexFromPos(ranges[i].head)
           cm.replaceRange(symbol + selection + symbol, from, to, '+input')
           if (anchorIndex > headIndex) {
             ranges[i].anchor.ch += symbol.length
@@ -25,18 +24,18 @@ export function wrapTextWith (editor, cm, symbol) {
           }
           cm.setSelections(ranges)
         } else {
-          const preEndPos = {
+          let preEndPos = {
             line: to.line,
             ch: to.ch + symbol.length
           }
-          const preText = cm.getRange(to, preEndPos)
-          const preIndex = wrapSymbols.indexOf(preText)
-          const postEndPos = {
+          let preText = cm.getRange(to, preEndPos)
+          let preIndex = wrapSymbols.indexOf(preText)
+          let postEndPos = {
             line: from.line,
             ch: from.ch - symbol.length
           }
-          const postText = cm.getRange(postEndPos, from)
-          const postIndex = wrapSymbols.indexOf(postText)
+          let postText = cm.getRange(postEndPos, from)
+          let postIndex = wrapSymbols.indexOf(postText)
           // check if surround symbol are list in array and matched
           if (preIndex > -1 && postIndex > -1 && preIndex === postIndex) {
             cm.replaceRange('', to, preEndPos, '+delete')
@@ -49,25 +48,25 @@ export function wrapTextWith (editor, cm, symbol) {
 }
 
 export function insertText (cm, text, cursorEnd = 0) {
-  const cursor = cm.getCursor()
+  let cursor = cm.getCursor()
   cm.replaceSelection(text, cursor, cursor)
   cm.focus()
   cm.setCursor({ line: cursor.line, ch: cursor.ch + cursorEnd })
 }
 
 export function insertLink (cm, isImage) {
-  const cursor = cm.getCursor()
-  const ranges = cm.listSelections()
+  let cursor = cm.getCursor()
+  let ranges = cm.listSelections()
   const linkEnd = '](https://)'
   const symbol = (isImage) ? '![' : '['
 
   for (let i = 0; i < ranges.length; i++) {
-    const range = ranges[i]
+    let range = ranges[i]
     if (!range.empty()) {
       const from = range.from()
       const to = range.to()
-      const anchorIndex = editor.indexFromPos(ranges[i].anchor)
-      const headIndex = editor.indexFromPos(ranges[i].head)
+      let anchorIndex = editor.indexFromPos(ranges[i].anchor)
+      let headIndex = editor.indexFromPos(ranges[i].head)
       let selection = cm.getRange(from, to)
       selection = symbol + selection + linkEnd
       cm.replaceRange(selection, from, to)
@@ -101,11 +100,11 @@ export function insertHeader (cm) {
 }
 
 export function insertOnStartOfLines (cm, symbol) {
-  const cursor = cm.getCursor()
-  const ranges = cm.listSelections()
+  let cursor = cm.getCursor()
+  let ranges = cm.listSelections()
 
   for (let i = 0; i < ranges.length; i++) {
-    const range = ranges[i]
+    let range = ranges[i]
     if (!range.empty()) {
       const from = range.from()
       const to = range.to()

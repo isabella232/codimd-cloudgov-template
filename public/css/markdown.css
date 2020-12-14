@@ -126,9 +126,7 @@
 .markdown-body pre.sequence-diagram,
 .markdown-body pre.graphviz,
 .markdown-body pre.mermaid,
-.markdown-body pre.abc,
-.markdown-body pre.geo,
-.markdown-body pre.vega {
+.markdown-body pre.abc {
     text-align: center;
     background-color: inherit;
     border-radius: 0;
@@ -149,8 +147,7 @@
 .markdown-body pre.sequence-diagram > code,
 .markdown-body pre.graphviz > code,
 .markdown-body pre.mermaid > code,
-.markdown-body pre.abc > code,
-.markdown-body pre.vega > code {
+.markdown-body pre.abc > code {
     text-align: left;
 }
 
@@ -158,8 +155,7 @@
 .markdown-body pre.sequence-diagram > svg,
 .markdown-body pre.graphviz > svg,
 .markdown-body pre.mermaid > svg,
-.markdown-body pre.abc > svg,
-.markdown-body pre.vega > svg {
+.markdown-body pre.abc > svg {
     max-width: 100%;
     height: 100%;
 }

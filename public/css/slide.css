@@ -223,9 +223,7 @@ pre.flow-chart,
 pre.sequence-diagram,
 pre.graphviz,
 pre.mermaid,
-pre.abc,
-pre.geo,
-pre.vega {
+pre.abc {
     text-align: center;
     background-color: white;
     border-radius: 0;
@@ -236,8 +234,7 @@ pre.flow-chart > code,
 pre.sequence-diagram > code,
 pre.graphviz > code,
 pre.mermaid > code,
-pre.abc > code,
-pre.vega > code {
+pre.abc > code {
     text-align: left;
 }
 
@@ -245,8 +242,7 @@ pre.flow-chart > svg,
 pre.sequence-diagram > svg,
 pre.graphviz > svg,
 pre.mermaid > svg,
-pre.abc > svg,
-pre.vega > svg {
+pre.abc > svg {
     max-width: 100%;
     height: 100%;
 }
@@ -267,6 +263,11 @@ pre.vega > svg {
 
 .slides, #meta {
     display: none;
+}
+
+.reveal .slides > section,
+.reveal .slides > section > section {
+    transform-style: flat;
 }
 
 .reveal.rtl .slides,

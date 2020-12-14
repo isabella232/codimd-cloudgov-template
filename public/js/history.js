@@ -147,7 +147,7 @@ export function writeHistory (title, tags) {
 }
 
 function writeHistoryToStorage (title, tags) {
-  const data = store.get('notehistory')
+  let data = store.get('notehistory')
   let notehistory
   if (data && typeof data === 'string') {
     notehistory = JSON.parse(data)
@@ -263,7 +263,7 @@ function parseToHistory (list, notehistory, callback) {
     for (let i = 0; i < notehistory.length; i++) {
       // migrate LZString encoded id to base64url encoded id
       try {
-        const id = LZString.decompressFromBase64(notehistory[i].id)
+        let id = LZString.decompressFromBase64(notehistory[i].id)
         if (id && checkNoteIdValid(id)) {
           notehistory[i].id = encodeNoteId(id)
         }

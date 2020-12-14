@@ -7,6 +7,7 @@ var ejs = require('ejs')
 var passport = require('passport')
 var methodOverride = require('method-override')
 var cookieParser = require('cookie-parser')
+var compression = require('compression')
 var session = require('express-session')
 var SequelizeStore = require('connect-session-sequelize')(session.Store)
 var fs = require('fs')
@@ -24,32 +25,30 @@ var logger = require('./lib/logger')
 var errors = require('./lib/errors')
 var models = require('./lib/models')
 var csp = require('./lib/csp')
-const { Environment } = require('./lib/config/enum')
 
-const { versionCheckMiddleware, checkVersion } = require('./lib/web/middleware/checkVersion')
-
-function createHttpServer () {
-  if (config.useSSL) {
-    const ca = (function () {
-      let i, len
-      const results = []
-      for (i = 0, len = config.sslCAPath.length; i < len; i++) {
-        results.push(fs.readFileSync(config.sslCAPath[i], 'utf8'))
-      }
-      return results
-    })()
-    const options = {
-      key: fs.readFileSync(config.sslKeyPath, 'utf8'),
-      cert: fs.readFileSync(config.sslCertPath, 'utf8'),
-      ca: ca,
-      dhparam: fs.readFileSync(config.dhParamPath, 'utf8'),
-      requestCert: false,
-      rejectUnauthorized: false
+// server setup
+var app = express()
+var server = null
+if (config.useSSL) {
+  var ca = (function () {
+    var i, len, results
+    results = []
+    for (i = 0, len = config.sslCAPath.length; i < len; i++) {
+      results.push(fs.readFileSync(config.sslCAPath[i], 'utf8'))
     }
-    return require('https').createServer(options, app)
-  } else {
-    return require('http').createServer(app)
+    return results
+  })()
+  var options = {
+    key: fs.readFileSync(config.sslKeyPath, 'utf8'),
+    cert: fs.readFileSync(config.sslCertPath, 'utf8'),
+    ca: ca,
+    dhparam: fs.readFileSync(config.dhParamPath, 'utf8'),
+    requestCert: false,
+    rejectUnauthorized: false
   }
+  server = require('https').createServer(options, app)
+} else {
+  server = require('http').createServer(app)
 }
 
 // if we manage to provide HTTPS domains, but don't provide TLS ourselves
@@ -61,7 +60,7 @@ if (!config.useSSL && config.protocolUseSSL) {
 
 // logger
 app.use(morgan('combined', {
-  stream: logger.stream
+  'stream': logger.stream
 }))
 
 // socket io
@@ -72,7 +71,7 @@ io.engine.ws = new (require('ws').Server)({
 })
 
 // others
-var realtime = require('./lib/realtime/realtime.js')
+var realtime = require('./lib/realtime.js')
 
 // assign socket io to realtime
 realtime.io = io
@@ -84,6 +83,9 @@ app.use(methodOverride('_method'))
 var sessionStore = new SequelizeStore({
   db: models.sequelize
 })
+
+// compression
+app.use(compression())
 
 // use hsts to tell https users stick to this
 if (config.hsts.enable) {
@@ -162,7 +164,7 @@ server.on('resumeSession', function (id, cb) {
 })
 
 // middleware which blocks requests when we're too busy
-app.use(require('./lib/middleware/tooBusy'))
+app.use(require('./lib/web/middleware/tooBusy'))
 
 app.use(flash())
 
@@ -171,7 +173,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // check uri is valid before going further
-app.use(require('./lib/middleware/checkURIValid'))
+app.use(require('./lib/web/middleware/checkURIValid'))
 // redirect url without trailing slashes
 app.use(require('./lib/web/middleware/redirectWithoutTrailingSlashes'))
 app.use(require('./lib/web/middleware/hedgeDocVersion'))
@@ -193,7 +195,6 @@ app.locals.authProviders = {
   facebook: config.isFacebookEnable,
   twitter: config.isTwitterEnable,
   github: config.isGitHubEnable,
-  bitbucket: config.isBitbucketEnable,
   gitlab: config.isGitLabEnable,
   mattermost: config.isMattermostEnable,
   dropbox: config.isDropboxEnable,
@@ -206,10 +207,6 @@ app.locals.authProviders = {
   openID: config.isOpenIDEnable,
   email: config.isEmailEnable,
   allowEmailRegister: config.allowEmailRegister
-}
-app.locals.versionInfo = {
-  latest: true,
-  versionItem: null
 }
 
 // Export/Import menu items
@@ -291,7 +288,6 @@ process.on('uncaughtException', function (err) {
 function handleTermSignals () {
   logger.info('HedgeDoc has been killed by signal, try to exit gracefully...')
   realtime.maintenance = true
-  realtime.terminate()
   // disconnect all socket.io clients
   Object.keys(io.sockets.sockets).forEach(function (key) {
     var socket = io.sockets.sockets[key]
@@ -315,9 +311,6 @@ function handleTermSignals () {
       })
     }
   }, 100)
-  setTimeout(() => {
-    process.exit(1)
-  }, 5000)
 }
 process.on('SIGINT', handleTermSignals)
 process.on('SIGTERM', handleTermSignals)
